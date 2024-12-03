@@ -146,35 +146,52 @@ public:
         return true;
     }
 
-    //调用此函数需要给一个方向，也就是wasd其中一个，而且这个函数要保证是wasd中最后松手的一个
-    void StopMove(int dir)
+    void StopMove()
     {
-        CharacterD->setVisible(false);
-        CharacterL->setVisible(false);
-        CharacterU->setVisible(false);
-        CharacterR->setVisible(false);
-        CharacterDstop->setVisible(false);
-        CharacterLstop->setVisible(false);
-        CharacterUstop->setVisible(false);
-        CharacterRstop->setVisible(false);
+        //CharacterD->setVisible(false);
+        //CharacterL->setVisible(false);
+        //CharacterU->setVisible(false);
+        //CharacterR->setVisible(false);
+        //CharacterDstop->setVisible(false);
+        //CharacterLstop->setVisible(false);
+        //CharacterUstop->setVisible(false);
+        //CharacterRstop->setVisible(false);
 
-        switch (dir)
-        {
-            case 1:
-                CharacterDstop->setVisible(true);
-                break;
-            case 2:
-                CharacterLstop->setVisible(true);
-                break;
-            case 3:
-                CharacterUstop->setVisible(true);
-                break;
-            case 4:
-                CharacterRstop->setVisible(true);
-                break;
-            default:
-                break;
+        //switch (dir)
+        //{
+        //    case 1:
+        //        CharacterDstop->setVisible(true);
+        //        break;
+        //    case 2:
+        //        CharacterLstop->setVisible(true);
+        //        break;
+        //    case 3:
+        //        CharacterUstop->setVisible(true);
+        //        break;
+        //    case 4:
+        //        CharacterRstop->setVisible(true);
+        //        break;
+        //    default:
+        //        break;
+        //}
+
+        if (CharacterD->isVisible()) {
+            CharacterD->setVisible(false);
+            CharacterDstop->setVisible(true);
         }
+        else if (CharacterL->isVisible()) {
+            CharacterL->setVisible(false);
+            CharacterLstop->setVisible(true);
+        }
+        else if (CharacterU->isVisible()) {
+            CharacterU->setVisible(false);
+            CharacterUstop->setVisible(true);
+        }
+        else if (CharacterR->isVisible()) {
+            CharacterR->setVisible(false);
+            CharacterRstop->setVisible(true);
+        }
+        
 
         return;
     }
