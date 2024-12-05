@@ -27,7 +27,6 @@
 
 #include "cocos2d.h"
 #include "CharacterAnimation.h"
-#include "global_variable.h"
 
 class HelloWorld : public cocos2d::Scene
 {
@@ -35,8 +34,6 @@ public:
     static cocos2d::Scene* createScene();
 
     virtual bool init();
-
-
 
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
@@ -46,19 +43,83 @@ public:
 
 	CharacterAnimation* MC;
 
-	void updata(float t)
+	//添加判断WASD不能同时按下的变量
+	unsigned short WASDisP_num = 0;
+	//添加一个判断人物是否移动的变量
+	bool isNoMoving = 0;
+
+	//一些按键是否被按下的变量
+	bool isKeyWPressed;                 //W键
+	bool isKeySPressed;                 //S键
+	bool isKeyAPressed;                 //A键
+	bool isKeyDPressed;                 //D键
+	bool isKeySPACEPressed;             //空格键
+	bool isKeyESCAPEPressed;            //Esc键
+	bool isKeyENTERPressed;             //Enter键
+	bool isKeyBACKSPACEPressed;         //Backspace键
+	bool isKey_0_Pressed;               //数字0键
+	bool isKey_1_Pressed;               //数字1键
+	bool isKey_2_Pressed;               //数字2键
+	bool isKey_3_Pressed;               //数字3键
+	bool isKey_4_Pressed;               //数字4键
+	bool isKey_5_Pressed;               //数字5键
+	bool isKey_6_Pressed;               //数字6键
+	bool isKey_7_Pressed;               //数字7键
+	bool isKey_8_Pressed;               //数字8键
+	bool isKey_9_Pressed;               //数字9键
+	//关于鼠标状态的变量
+	bool isMouseButtonLeftPressed;      //左键
+	bool isMouseButtonRightPressed;     //右键
+	float MouseAbscissa;                //鼠标光标横坐标
+	float MouseOrdinate;                //鼠标光标纵坐标
+	float MouseScrollX;                 //滚轮横向状态，恒为0
+	float MouseScrollY;                 //滚轮纵向状态，1为向上，-1为向下
+
+	virtual void update(float delta) override
 	{
-		if (isKeyAPressed) {
-			MC->AMoveL();
+		WASDisP_num = 0;
+		WASDisP_num += isKeySPressed;
+		WASDisP_num += isKeyAPressed;
+		WASDisP_num += isKeyWPressed;
+		WASDisP_num += isKeyDPressed;
+		if (WASDisP_num != 1) {//多于两个按键按下或无按下按键时停止不动
+			MC->StopMove();
+			isNoMoving = true;
+			return;
 		}
+
+		if (isKeySPressed){
+			MC->Move(1);
+			MC->runAction(MoveBy::create(0.2f, Vec2(0, -2)));
+		}
+
+		if (isKeyAPressed){
+			MC->Move(2); 
+			MC->runAction(MoveBy::create(0.2f, Vec2(-2, 0)));
+		}
+			
+		if (isKeyWPressed){
+			MC->Move(3);
+			MC->runAction(MoveBy::create(0.2f, Vec2(0, 2)));
+		}
+			
+		if (isKeyDPressed){
+			MC->Move(4);
+			MC->runAction(MoveBy::create(0.2f, Vec2(2, 0)));
+		}
+			
+		isNoMoving = false;
+
+		return;
 	}
 
-	void onEnter()
+	virtual void onEnter() override
 	{
 		Scene::onEnter();
 		this->scheduleUpdate();
 	}
 
+	//鼠标相关
 	void onMouseDown(EventMouse* event)
 	{
 		EventMouse::MouseButton button = event->getMouseButton();
@@ -98,10 +159,10 @@ public:
 		bool state = true;
 		if (keyCode == EventKeyboard::KeyCode::KEY_W)
 			isKeyWPressed = state;
-		if (keyCode == EventKeyboard::KeyCode::KEY_S)
-			isKeySPressed = state;
-		if (keyCode == EventKeyboard::KeyCode::KEY_A)
-			isKeyAPressed = state;
+		if (keyCode == EventKeyboard::KeyCode::KEY_S) 
+			isKeySPressed = state;		
+		if (keyCode == EventKeyboard::KeyCode::KEY_A) 
+			isKeyAPressed = state;		
 		if (keyCode == EventKeyboard::KeyCode::KEY_D)
 			isKeyDPressed = state;
 		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE)
@@ -136,13 +197,13 @@ public:
 	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 	{
 		bool state = false;
-		if (keyCode == EventKeyboard::KeyCode::KEY_W)
+		if (keyCode == EventKeyboard::KeyCode::KEY_W) 
 			isKeyWPressed = state;
 		if (keyCode == EventKeyboard::KeyCode::KEY_S)
 			isKeySPressed = state;
 		if (keyCode == EventKeyboard::KeyCode::KEY_A)
 			isKeyAPressed = state;
-		if (keyCode == EventKeyboard::KeyCode::KEY_D)
+		if (keyCode == EventKeyboard::KeyCode::KEY_D) 
 			isKeyDPressed = state;
 		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE)
 			isKeySPACEPressed = state;

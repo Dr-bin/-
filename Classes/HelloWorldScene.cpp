@@ -50,76 +50,22 @@ bool HelloWorld::init()
     }
 
     auto keyboardListener = EventListenerKeyboard::create();
-    auto mouseListener = EventListenerMouse::create();
+    //auto mouseListener = EventListenerMouse::create();
     keyboardListener->onKeyPressed = CC_CALLBACK_2(HelloWorld::onKeyPressed, this);
     keyboardListener->onKeyReleased = CC_CALLBACK_2(HelloWorld::onKeyReleased, this);
-    mouseListener->onMouseDown = CC_CALLBACK_1(HelloWorld::onMouseDown, this);
-    mouseListener->onMouseUp = CC_CALLBACK_1(HelloWorld::onMouseUp, this);
-    mouseListener->onMouseMove = CC_CALLBACK_1(HelloWorld::onMouseMove, this);
-    mouseListener->onMouseScroll = CC_CALLBACK_1(HelloWorld::onMouseScroll, this);
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
+    //mouseListener->onMouseDown = CC_CALLBACK_1(HelloWorld::onMouseDown, this);
+    //mouseListener->onMouseUp = CC_CALLBACK_1(HelloWorld::onMouseUp, this);
+    //mouseListener->onMouseMove = CC_CALLBACK_1(HelloWorld::onMouseMove, this);
+    //mouseListener->onMouseScroll = CC_CALLBACK_1(HelloWorld::onMouseScroll, this);
+    //_eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
-    //auto cache = SpriteFrameCache::getInstance();
-    //cache->addSpriteFramesWithFile("farmer.plist");
+    MC = CharacterAnimation::create("farmer.plist", 0.15f, 3.0f, Vec2(400, 400));
+    addChild(MC);
 
-    //Vector<SpriteFrame*> vec;
-    //char name[15];
-    //memset(name, 0, 15);
-    //for (int i = 0; i < 16; i++) {
-    //    sprintf(name, "Abigail-%d.png", i);
-    //    vec.pushBack(cache->getSpriteFrameByName(name));
-    //}
-
-    //Animation* animation = Animation::createWithSpriteFrames(vec, 0.2f);
-    //Animate* animate = Animate::create(animation);
- 
-    //auto sprite = Sprite::createWithSpriteFrameName("Abigail-1.png");
-    //addChild(sprite);
-    //sprite->setPosition(Vec2(200, 200));
-    //sprite->setScale(4.0f);
-    //sprite->runAction(RepeatForever::create(animate));
-
-    auto mainCharacter = CharacterAnimation::create("farmer.plist", 0.2f, 3.0f, Vec2(400, 400));
-    addChild(mainCharacter);
-    MC = mainCharacter;
-
-
-    //auto eventListener = EventListenerKeyboard::create();
-    //eventListener->onKeyPressed = [&mainCharacter](EventKeyboard::KeyCode keyCode, Event* event) {
-    //    log("0x%p", mainCharacter);
-    //    if (mainCharacter == NULL)
-    //        return false;
-    //    if (keyCode == EventKeyboard::KeyCode::KEY_A)
-    //            mainCharacter->AMoveL();
-    //    return false;
-    //    };
-    //eventListener->onKeyReleased = [mainCharacter](EventKeyboard::KeyCode keyCode, Event* event) {
-    //    if (keyCode == EventKeyboard::KeyCode::KEY_A)
-    //        mainCharacter->StopMove(1);
-    //    return false;
-    //    };
-
-    //_eventDispatcher->addEventListenerWithSceneGraphPriority(eventListener, this);
-
-    /***********************************************************/
-
-    //// 加载精灵
-    //auto characterSprite = Sprite::create();
-    //characterSprite->setPosition(Vec2(Director::getInstance()->getVisibleSize() / 2));
-    //this->addChild(characterSprite);
-
-    //// Create the character animation manager
-    //auto characterAnimation = CharacterAnimation::create(characterSprite, "character_walk", 10, 0.1f);
-    //this->addChild(characterAnimation);
-
-    //// Play the animation when needed
-    //// characterAnimation->playAnimation();
-
-    //// Stop the animation when needed
-    //// characterAnimation->stopAnimation();
-
+    this->scheduleUpdate();
     /************************以上为动画部分代码******************************/
+
     return true;
 }
 
