@@ -12,14 +12,11 @@ class CharacterAnimation : public Sprite
 {
 public:
     // 成员变量，用于存储动画和精灵
-    Sprite* CharacterD = nullptr;
-    Sprite* CharacterL = nullptr;
-    Sprite* CharacterU = nullptr;
-    Sprite* CharacterR = nullptr;
-    Sprite* CharacterDstop = nullptr;
-    Sprite* CharacterLstop = nullptr;
-    Sprite* CharacterUstop = nullptr;
-    Sprite* CharacterRstop = nullptr;
+    AnimationCache* Acache;
+    SpriteFrameCache* cache;
+    Sprite* Chara = nullptr;
+    //判断人物现在在向什么方向移动的变量
+    int MoveDir = 0;//1234,上下左右
     //添加判断WASD不能同时按下的变量
     unsigned short WASDisP_num = 0;
     //一些按键是否被按下的变量

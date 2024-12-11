@@ -24,8 +24,9 @@ bool CharacterAnimation::init(const std::string& plistFile, float frameDuration,
     }
 
     // 获取SpriteFrameCache实例并添加精灵帧
-    auto cache = SpriteFrameCache::getInstance();
+    cache = SpriteFrameCache::getInstance();
     cache->addSpriteFramesWithFile(plistFile);
+    Acache = AnimationCache::getInstance();
 
     // 创建存储SpriteFrame指针的向量
     Vector<SpriteFrame*> rightFrames;
@@ -63,65 +64,20 @@ bool CharacterAnimation::init(const std::string& plistFile, float frameDuration,
     auto leftAnimation = Animation::createWithSpriteFrames(leftFrames, frameDuration);
     auto upAnimation = Animation::createWithSpriteFrames(upFrames, frameDuration);
 
+    Acache->addAnimation(downAnimation, "moveDown");
+    Acache->addAnimation(rightAnimation, "moveRight");
+    Acache->addAnimation(leftAnimation, "moveLeft");
+    Acache->addAnimation(upAnimation, "moveUp");
+    Chara = Sprite::createWithSpriteFrameName("AMoveD-2.png");
+    Chara->setPosition(position);
+    Chara->setScale(scale);
+    this->addChild(Chara);
+
     // 创建动画动作（为每个方向）
     auto downAnimate = Animate::create(downAnimation);
     auto rightAnimate = Animate::create(rightAnimation);
     auto leftAnimate = Animate::create(leftAnimation);
     auto upAnimate = Animate::create(upAnimation);
-
-    // 创建精灵并添加到当前节点（即这个管理类）
-    CharacterD = Sprite::createWithSpriteFrameName("AMoveD-1.png");
-    this->addChild(CharacterD);
-    CharacterL = Sprite::createWithSpriteFrameName("AMoveL-1.png");
-    this->addChild(CharacterL);
-    CharacterU = Sprite::createWithSpriteFrameName("AMoveU-1.png");
-    this->addChild(CharacterU);
-    CharacterR = Sprite::createWithSpriteFrameName("AMoveR-1.png");
-    this->addChild(CharacterR);
-
-    CharacterDstop = Sprite::createWithSpriteFrameName("AMoveD-1.png");
-    this->addChild(CharacterDstop);
-    CharacterLstop = Sprite::createWithSpriteFrameName("AMoveL-1.png");
-    this->addChild(CharacterLstop);
-    CharacterUstop = Sprite::createWithSpriteFrameName("AMoveU-1.png");
-    this->addChild(CharacterUstop);
-    CharacterRstop = Sprite::createWithSpriteFrameName("AMoveR-1.png");
-    this->addChild(CharacterRstop);
-
-    CharacterD->setVisible(false);
-    CharacterL->setVisible(false);
-    CharacterU->setVisible(false);
-    CharacterR->setVisible(false);
-    //CharacterDstop->setVisible(false);
-    CharacterLstop->setVisible(false);
-    CharacterUstop->setVisible(false);
-    CharacterRstop->setVisible(false);
-
-
-    // 设置精灵的位置、缩放比例和动画
-    CharacterL->setPosition(position);
-    CharacterD->setPosition(position);
-    CharacterU->setPosition(position);
-    CharacterR->setPosition(position);
-    CharacterDstop->setPosition(position);
-    CharacterLstop->setPosition(position);
-    CharacterUstop->setPosition(position);
-    CharacterRstop->setPosition(position);
-
-    CharacterL->setScale(scale);
-    CharacterD->setScale(scale);
-    CharacterU->setScale(scale);
-    CharacterR->setScale(scale);
-    CharacterDstop->setScale(scale);
-    CharacterLstop->setScale(scale);
-    CharacterUstop->setScale(scale);
-    CharacterRstop->setScale(scale);
-
-    CharacterD->runAction(RepeatForever::create(downAnimate));
-    CharacterL->runAction(RepeatForever::create(leftAnimate));
-    CharacterU->runAction(RepeatForever::create(upAnimate));
-    CharacterR->runAction(RepeatForever::create(rightAnimate));
-
 
     //以下是监听器部分,注释部分还没有实际功能
     auto keyboardListener = EventListenerKeyboard::create();
@@ -141,53 +97,54 @@ bool CharacterAnimation::init(const std::string& plistFile, float frameDuration,
 }
 
 void CharacterAnimation::Move(int dir) {
-
-    CharacterD->setVisible(false);
-    CharacterL->setVisible(false);
-    CharacterU->setVisible(false);
-    CharacterR->setVisible(false);
-    CharacterDstop->setVisible(false);
-    CharacterLstop->setVisible(false);
-    CharacterUstop->setVisible(false);
-    CharacterRstop->setVisible(false);
-
+    if (MoveDir)//如果在移动就不动
+        return;
     switch (dir)
     {
         case 1:
-            CharacterU->setVisible(true);
+            MoveDir = 1;
+            Chara->runAction(RepeatForever::create(Animate::create(Acache->getAnimation("moveUp"))));
             break;
         case 2:
-            CharacterD->setVisible(true);
+            MoveDir = 2;
+            Chara->runAction(RepeatForever::create(Animate::create(Acache->getAnimation("moveDown"))));
             break;
         case 3:
-            CharacterL->setVisible(true);
+            MoveDir = 3;
+            Chara->runAction(RepeatForever::create(Animate::create(Acache->getAnimation("moveLeft"))));
             break;
         case 4:
-            CharacterR->setVisible(true);
+            MoveDir = 4;
+            Chara->runAction(RepeatForever::create(Animate::create(Acache->getAnimation("moveRight"))));
             break;
         default:
             break;
     }
+
     return;
 }
-void CharacterAnimation::StopMove()
-{
-    if (CharacterD->isVisible()) {
-        CharacterD->setVisible(false);
-        CharacterDstop->setVisible(true);
+void CharacterAnimation::StopMove(){
+    if (!MoveDir)
+        return;
+    Chara->stopAllActions();
+    switch (MoveDir)
+    {
+        case 1:
+            Chara->setSpriteFrame(cache->getSpriteFrameByName("AMoveU-2.png"));
+            break;
+        case 2:
+            Chara->setSpriteFrame(cache->getSpriteFrameByName("AMoveD-2.png"));
+            break;
+        case 3:
+            Chara->setSpriteFrame(cache->getSpriteFrameByName("AMoveL-2.png"));
+            break;
+        case 4:
+            Chara->setSpriteFrame(cache->getSpriteFrameByName("AMoveR-2.png"));
+            break;
+        default:
+            break;
     }
-    else if (CharacterL->isVisible()) {
-        CharacterL->setVisible(false);
-        CharacterLstop->setVisible(true);
-    }
-    else if (CharacterU->isVisible()) {
-        CharacterU->setVisible(false);
-        CharacterUstop->setVisible(true);
-    }
-    else if (CharacterR->isVisible()) {
-        CharacterR->setVisible(false);
-        CharacterRstop->setVisible(true);
-    }
+    MoveDir = 0;
     return;
 }
 
