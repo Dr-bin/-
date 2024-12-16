@@ -4,20 +4,31 @@
 #include"CharacterAnimation.h"
 USING_NS_CC;
 const int FARM = 0;
-const int FARM_WINTER = 1;
-const int FARM_NOWATER = 2;
-const int FROEST = 3;
-const int MINE = 4;
-const int SEA = 5;
-const int VILLAGE = 6;
-const int VILLAGE_WINTER = 7;
-const int winter = 1;
+const int FOREST = 1;
+const int MINE = 2;
+const int SEA = 3;
+const int VILLAGE = 4;
+/*地图使用方式：
+* 先删掉头文件的最后一个函数
+* 再在创建场景时按这种方式创建;
+* auto scene = Scene::createWithPhysics();
+	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+*然后给scene加一个MapLayer对象即可
+*/
+
+/*地图切换方式
+* 对MapLayer对象使用setMap方法即可，参数见const int 表。
+*/
+
+
 
 //房子
 class House : public Node {
 public:
 	virtual bool init();
 	CREATE_FUNC(House);
+	
 	Sprite* house;
 };
 // 地图节点类，定义了基本的地图节点属性和方法
@@ -28,6 +39,7 @@ public:
 	CREATE_FUNC(MapNode);
 	Sprite* ground;
 	int need_rand = 1;
+	void setEdgebox(int x1, int y1, int x2, int y2);
 	
 };
 
@@ -97,13 +109,17 @@ public:
     MapNode* currentMap;
 };
 
-// 地图测试类，继承自场景类，包含地图层
-class Maptest :public Scene
-{
-public:
-	virtual bool init();
-	CREATE_FUNC(Maptest);
-	MapLayer* l1;
-}; 
+
+static Scene* createMapScene() {
+	auto scene = Scene::createWithPhysics();
+	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+
+	auto layer = MapLayer::create();
+	layer->setMap(5);
+	scene->addChild(layer);
+	return scene;
+}
+
 
 

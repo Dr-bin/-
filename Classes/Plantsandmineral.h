@@ -18,7 +18,7 @@ public:
     void switchSeason(int season);
     // ¼õÉÙÉúÃüÖµ
     void damage(int amount);
-private:
+    PhysicsBody* body;
     Sprite* _spriteSpring;
     Sprite* _spriteSummer;
     Sprite* _spriteAutumn;

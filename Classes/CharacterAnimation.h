@@ -4,10 +4,9 @@
 USING_NS_CC;
 
 // 使用示例
-// 在你的场景或层的某个方法中：
-// MC = CharacterAnimation::create("farmer.plist", 0.2f, 4.0f, Vec2(200, 200));
+// 在你的场景或层的某个方法中:
+// auto MC = CharacterAnimation::create("farmer.plist", 0.2f, 4.0f, Vec2(200, 200));
 // this->addChild(MC); // 假设你在一个继承自Node的类中
-// MC是场景类中创建的一个成员变量，类型就是CharacterAnimation*
 
 class CharacterAnimation : public Sprite
 {
@@ -21,214 +20,57 @@ public:
     Sprite* CharacterLstop = nullptr;
     Sprite* CharacterUstop = nullptr;
     Sprite* CharacterRstop = nullptr;
+    //添加判断WASD不能同时按下的变量
+    unsigned short WASDisP_num = 0;
+    //一些按键是否被按下的变量
+    bool isKeyWPressed = false;                 //W键
+    bool isKeySPressed = false;                 //S键
+    bool isKeyAPressed = false;                 //A键
+    bool isKeyDPressed = false;                 //D键
+    bool isKeySPACEPressed = false;             //空格键
+    bool isKeyESCAPEPressed = false;            //Esc键
+    bool isKeyENTERPressed = false;             //Enter键
+    bool isKeyBACKSPACEPressed = false;         //Backspace键
+    bool isKey_0_Pressed = false;               //数字0键
+    bool isKey_1_Pressed = false;               //数字1键
+    bool isKey_2_Pressed = false;               //数字2键
+    bool isKey_3_Pressed = false;               //数字3键
+    bool isKey_4_Pressed = false;               //数字4键
+    bool isKey_5_Pressed = false;               //数字5键
+    bool isKey_6_Pressed = false;               //数字6键
+    bool isKey_7_Pressed = false;               //数字7键
+    bool isKey_8_Pressed = false;               //数字8键
+    bool isKey_9_Pressed = false;               //数字9键
+    //关于鼠标状态的变量
+    bool isMouseButtonLeftPressed = false;      //左键
+    bool isMouseButtonRightPressed = false;     //右键
+    float MouseAbscissa = 0.1f;                //鼠标光标横坐标
+    float MouseOrdinate = 0.1f;                //鼠标光标纵坐标
+    float MouseScrollX = 0;                 //滚轮横向状态，恒为0
+    float MouseScrollY = 0;                 //滚轮纵向状态，1为向上，-1为向下
 
-    static CharacterAnimation* create(const std::string& plistFile, float frameDuration, float scale, const Vec2& position)
-    {
-        auto ret = new (std::nothrow) CharacterAnimation();
-        if (ret && ret->init(plistFile, frameDuration, scale, position))
-        {
-            ret->autorelease();
-            return ret;
-        }
-        else
-        {
-            delete ret;
-            ret = nullptr;
-        }
-        return ret;
-    }
+    static CharacterAnimation* create(const std::string& plistFile, float frameDuration, float scale, const Vec2& position);
 
-    bool init(const std::string& plistFile, float frameDuration, float scale, const Vec2& position)
-    {
-        if (!Node::init())
-        {
-            return false;
-        }
+    bool init(const std::string& plistFile, float frameDuration, float scale, const Vec2& position);
 
-        // 获取SpriteFrameCache实例并添加精灵帧
-        auto cache = SpriteFrameCache::getInstance();
-        cache->addSpriteFramesWithFile(plistFile);
+	void StopMove();
+    //dir=1,2,3,4:上下左右
+	void Move(int dir);
 
-        // 创建存储SpriteFrame指针的向量
-        Vector<SpriteFrame*> rightFrames;
-        Vector<SpriteFrame*> downFrames;
-        Vector<SpriteFrame*> leftFrames;
-        Vector<SpriteFrame*> upFrames;
+    //以下为监听器部分
+	virtual void update(float delta) override;
 
+	//鼠标相关
+	void onMouseDown(EventMouse* event);
+	void onMouseUp(EventMouse* event);
+	void onMouseMove(EventMouse* event);
+	void onMouseScroll(EventMouse* event);
+	//键盘的回调函数
+	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
+    void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
+//物理引擎相关
+    bool onContactBegin(PhysicsContact& contact);
 
-        // 为每一帧生成名称并添加到向量中
-        char name[15];
-        for (int i = 1; i <= 4; ++i)
-        {
-            sprintf(name, "AMoveD-%d.png", i);
-            downFrames.pushBack(cache->getSpriteFrameByName(name));
-        }
-        for (int i = 1; i <= 4; ++i)
-        {
-            sprintf(name, "AMoveR-%d.png", i);
-            rightFrames.pushBack(cache->getSpriteFrameByName(name));
-        }
-        for (int i = 1; i <= 4; ++i)
-        {
-            sprintf(name, "AMoveU-%d.png", i);
-            upFrames.pushBack(cache->getSpriteFrameByName(name));
-        }
-        for (int i = 1; i <= 4; ++i)
-        {
-            sprintf(name, "AMoveL-%d.png", i);
-            leftFrames.pushBack(cache->getSpriteFrameByName(name));
-        }
-
-        // 创建动画（为每个方向）
-        auto downAnimation = Animation::createWithSpriteFrames(downFrames, frameDuration);
-        auto rightAnimation = Animation::createWithSpriteFrames(rightFrames, frameDuration);
-        auto leftAnimation = Animation::createWithSpriteFrames(leftFrames, frameDuration);
-        auto upAnimation = Animation::createWithSpriteFrames(upFrames, frameDuration);
-
-        // 创建动画动作（为每个方向）
-        auto downAnimate = Animate::create(downAnimation);
-        auto rightAnimate = Animate::create(rightAnimation);
-        auto leftAnimate = Animate::create(leftAnimation);
-        auto upAnimate = Animate::create(upAnimation);
-
-        // 创建精灵并添加到当前节点（即这个管理类）
-        CharacterD = Sprite::createWithSpriteFrameName("AMoveD-1.png");
-        this->addChild(CharacterD);
-        CharacterL = Sprite::createWithSpriteFrameName("AMoveL-1.png");
-        this->addChild(CharacterL);
-        CharacterU = Sprite::createWithSpriteFrameName("AMoveU-1.png");
-        this->addChild(CharacterU);
-        CharacterR = Sprite::createWithSpriteFrameName("AMoveR-1.png");
-        this->addChild(CharacterR);
-
-        CharacterDstop = Sprite::createWithSpriteFrameName("AMoveD-1.png");
-        this->addChild(CharacterDstop);
-        CharacterLstop = Sprite::createWithSpriteFrameName("AMoveL-1.png");
-        this->addChild(CharacterLstop);
-        CharacterUstop = Sprite::createWithSpriteFrameName("AMoveU-1.png");
-        this->addChild(CharacterUstop);
-        CharacterRstop = Sprite::createWithSpriteFrameName("AMoveR-1.png");
-        this->addChild(CharacterRstop);
-
-        CharacterD->setVisible(false);
-        CharacterL->setVisible(false);
-        CharacterU->setVisible(false);
-        CharacterR->setVisible(false);
-        CharacterLstop->setVisible(false);
-        CharacterUstop->setVisible(false);
-        CharacterRstop->setVisible(false);
-
-
-        // 设置精灵的位置、缩放比例和动画
-        CharacterL->setPosition(position);
-        CharacterD->setPosition(position);
-        CharacterU->setPosition(position);
-        CharacterR->setPosition(position);
-        CharacterDstop->setPosition(position);
-        CharacterLstop->setPosition(position);
-        CharacterUstop->setPosition(position);
-        CharacterRstop->setPosition(position);
-
-        CharacterL->setScale(scale);
-        CharacterD->setScale(scale);
-        CharacterU->setScale(scale);
-        CharacterR->setScale(scale);
-        CharacterDstop->setScale(scale);
-        CharacterLstop->setScale(scale);
-        CharacterUstop->setScale(scale);
-        CharacterRstop->setScale(scale);
-
-        CharacterD->runAction(RepeatForever::create(downAnimate));
-        CharacterL->runAction(RepeatForever::create(leftAnimate));
-        CharacterU->runAction(RepeatForever::create(upAnimate));
-        CharacterR->runAction(RepeatForever::create(rightAnimate));
-
-        return true;
-    }
-
-    void StopMove()
-    {
-        //CharacterD->setVisible(false);
-        //CharacterL->setVisible(false);
-        //CharacterU->setVisible(false);
-        //CharacterR->setVisible(false);
-        //CharacterDstop->setVisible(false);
-        //CharacterLstop->setVisible(false);
-        //CharacterUstop->setVisible(false);
-        //CharacterRstop->setVisible(false);
-
-        //switch (dir)
-        //{
-        //    case 1:
-        //        CharacterDstop->setVisible(true);
-        //        break;
-        //    case 2:
-        //        CharacterLstop->setVisible(true);
-        //        break;
-        //    case 3:
-        //        CharacterUstop->setVisible(true);
-        //        break;
-        //    case 4:
-        //        CharacterRstop->setVisible(true);
-        //        break;
-        //    default:
-        //        break;
-        //}
-
-        if (CharacterD->isVisible()) {
-            CharacterD->setVisible(false);
-            CharacterDstop->setVisible(true);
-        }
-        else if (CharacterL->isVisible()) {
-            CharacterL->setVisible(false);
-            CharacterLstop->setVisible(true);
-        }
-        else if (CharacterU->isVisible()) {
-            CharacterU->setVisible(false);
-            CharacterUstop->setVisible(true);
-        }
-        else if (CharacterR->isVisible()) {
-            CharacterR->setVisible(false);
-            CharacterRstop->setVisible(true);
-        }
-        
-
-        return;
-    }
-
-    //dir=1,2,3,4:下左上右
-    void Move(int dir)
-    {
-
-        CharacterD->setVisible(false);
-        CharacterL->setVisible(false);
-        CharacterU->setVisible(false);
-        CharacterR->setVisible(false);
-        CharacterDstop->setVisible(false);
-        CharacterLstop->setVisible(false);
-        CharacterUstop->setVisible(false);
-        CharacterRstop->setVisible(false);
-
-        switch (dir)
-        {
-            case 1:
-                CharacterD->setVisible(true);
-                break;
-            case 2:
-                CharacterL->setVisible(true);
-                break;
-            case 3:
-                CharacterU->setVisible(true);
-                break;
-            case 4:
-                CharacterR->setVisible(true);
-                break;
-            default:
-                break;
-        }
-        
-        return;
-    }
+    PhysicsBody* body;
 
 };
-
