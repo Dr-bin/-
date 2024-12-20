@@ -39,22 +39,22 @@ bool Plant::init(const std::string& springSprite, const std::string& summerSprit
         _health = 3;
         _currentSeason = 0;
         _isTregger = 0;
-        this->schedule(CC_SCHEDULE_SELECTOR(Plant::updateSeasons), switchtime);
+        this->scheduleUpdate();
         return true;
     }
     return false;
 }
 //控制季节变换
-void Plant::updateSeasons(float dt)
+void Plant::update(float dt)
 {
     if (_isTregger)
         return;
-    static float timeSinceLastSeasonChange = 0.0f;
     timeSinceLastSeasonChange += dt;
-
+    //timeSinceLastSeasonChange >= switchtime &&
     // 检查是否已经过去了switchtime秒
     if (timeSinceLastSeasonChange >= switchtime && !_isTregger)
     {
+        CCLOG("1");
         timeSinceLastSeasonChange = 0.0f; // 重置计时器
         _currentSeason = (_currentSeason + 1) % 4; // 循环季节
         switchSeason(_currentSeason);

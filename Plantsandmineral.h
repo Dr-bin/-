@@ -13,12 +13,12 @@ public:
     // 初始化植物
     bool init(const string& springSprite, const string& summerSprite,
         const string& autumnSprite, const string& winterSprite);
-    void updateSeasons(float dt);
+    void update(float dt)override;
     // 更新植物的季节显示
     void switchSeason(int season);
     // 减少生命值
     void damage(int amount);
-private:
+    PhysicsBody* body;
     Sprite* _spriteSpring;
     Sprite* _spriteSummer;
     Sprite* _spriteAutumn;
@@ -26,7 +26,8 @@ private:
     Sprite* _currentSprite; // 当前显示的精灵
     int _health;
     int _currentSeason;
-    float switchtime = 1.0f;    //季节更替的时间
+    float switchtime = 5.0f;    //季节更替的时间
+    float timeSinceLastSeasonChange = 0.0f;
     bool _isTregger;
     // 树倒下和消失的动画
     void fallDownAndDisappear();
