@@ -46,6 +46,9 @@ void AnimalManager::sellAnimal(Animal* animal)
 		CCLOG("Animal sold for %d", price);
 		removeAnimal(animal);
 	}
+	else {
+		CCLOG("Animal is not mature yet, cannot sell.");
+	}
 }
 
 void AnimalManager::onMouseDown(Event* event)
@@ -97,7 +100,7 @@ void AnimalManager::sellAnimalAtPosition(Vec2 clickPosition)
 	for (auto& animal : animals)
 		//TODO: 卖出动物,人物获得金钱
 	{
-		if (animal->getBoundingBox().containsPoint(clickPosition))
+		if (animal->getCurrentSprite()->getBoundingBox().containsPoint(clickPosition))
 		{
 			if (auto livestock = dynamic_cast<Livestock*>(animal))
 				sellAnimal(animal);
@@ -154,6 +157,8 @@ void AnimalManager::removeAnimal(Animal* animal)
 	if (it != animals.end())
 	{
 		animals.erase(it);
+		animal->stopAllActions();
 		this->removeChild(animal);
+
 	}
 }

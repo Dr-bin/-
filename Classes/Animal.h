@@ -107,14 +107,21 @@ public:
 
 
 	//获取产品
-	std::string getProduct(int &num) const {
+	std::string getProduct(int &num)  {
 		int productNum = products.size();
+		
 		num = productNum;
 		if (productNum == 0) {
 			return "NULL";
 		}
-		else
-			return products[0];
+		else {
+			//物品栏置零
+			std::string name = products[0];
+			products.clear();
+			return name;
+		}
+
+			
 		
 	}
 	//获取价格
