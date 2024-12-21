@@ -1,8 +1,7 @@
 #include"maptry.h"
 #include<stdlib.h>
 #include<ctime>
-
-
+#include"menus.h"
 bool MapNode::init() {
 	if (!Node::init()) return false;
 	return true;
@@ -136,9 +135,6 @@ bool MapLayer::init() {
 	if (!Node::init())	return false;
 	maps[0] = FarmMap::create();
 	auto mouse = EventListenerMouse::create();
-	mouse->onMouseDown = [](EventMouse* event) {
-		CCLOG("x:%f,y:%f", event->getCursorX(), event->getCursorY());
-		};
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(mouse, this);
 	maps[1] = ForestMap::create();
 	maps[2] = MineMap::create();
@@ -148,12 +144,14 @@ bool MapLayer::init() {
 	this->addChild(maps[0]);
 	currentMap = maps[0];
 	setMap(VILLAGE);
-	auto ch = CharacterAnimation::create("farmer.plist", 0.2f, 2.0f, Vec2(200, 200));
-	this->addChild(ch, 50);
-	ch->Move(1);
+	/*以下有改动*/
+	player = CharacterAnimation::create("farmer.plist", 0.2f, 2.0f, Vec2(200, 200));
+	this->addChild(player, 50);
+	player->Move(1);
+	mouse->onMouseDown = CC_CALLBACK_1(CharacterAnimation::onMouseDown, player);
 	return true;
-
 }
+
 
 bool ForestMap::init()
 {

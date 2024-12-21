@@ -48,6 +48,8 @@ public:
     float MouseOrdinate = 0.1f;                //鼠标光标纵坐标
     float MouseScrollX = 0;                 //滚轮横向状态，恒为0
     float MouseScrollY = 0;                 //滚轮纵向状态，1为向上，-1为向下
+    //一些状态变量
+    int now_item = 1;                         //当前物品
 
     static CharacterAnimation* create(const std::string& plistFile, float frameDuration, float scale, const Vec2& position);
 
@@ -56,7 +58,7 @@ public:
 	void StopMove();
     //dir=1,2,3,4:上下左右
 	void Move(int dir);
-
+    Vec2 getCharacterPosition();
     //以下为监听器部分
 	virtual void update(float delta) override;
 
@@ -68,9 +70,22 @@ public:
 	//键盘的回调函数
 	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
     void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
-//物理引擎相关
+    //物理引擎相关
     bool onContactBegin(PhysicsContact& contact);
-
+    //人物动作相关
+    char get_facing();
+    void useAxeToLeft();
+    void useAxeToRight();
+    void usePickToLeft();
+    void usePickToRight();
+    void useHoeToLeft();
+    void useHoeToRight();
+    void fetchWaterToLeft();
+    void fetchWaterToRight();
+    void useTool();
+    void wateringToLeft();
+    void wateringToRight();
+    
     PhysicsBody* body;
 
 };

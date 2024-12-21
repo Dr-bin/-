@@ -27,7 +27,9 @@
 //#include "SpriteTemp.h"
 // #define USE_AUDIO_ENGINE 1
 #include"maptry.h"
-
+#include"menus.h"
+#include"GameScene.h"
+#include"BeginScene.h"
 #if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
 using namespace cocos2d::experimental;
@@ -113,7 +115,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // run
     auto mapscene =createMapScene();
-    director->runWithScene(mapscene);
+    auto gamescene = GameScene::create();
+    auto beginscene = BeginScene::create();
+    director->runWithScene(beginscene);
     return true;
 }
 

@@ -107,10 +107,12 @@ public:
 	//使用setMap设置当前地图，参数见const int 表。
 	void setMap(int map);
     MapNode* currentMap;
+	CharacterAnimation* player;
 };
 
 
 static Scene* createMapScene() {
+	PhysicsWorld* physicsWorld;
 	auto scene = Scene::createWithPhysics();
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
@@ -120,6 +122,9 @@ static Scene* createMapScene() {
 	scene->addChild(layer);
 	return scene;
 }
+
+
+
 
 
 

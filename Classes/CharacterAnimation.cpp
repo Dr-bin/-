@@ -16,6 +16,10 @@ CharacterAnimation* CharacterAnimation::create(const std::string& plistFile, flo
     return ret;
 }
 
+Vec2 CharacterAnimation::getCharacterPosition() {
+    return this->CharacterD->getPosition();
+}
+
 bool CharacterAnimation::init(const std::string& plistFile, float frameDuration, float scale, const Vec2& position)
 {
     if (!Node::init())
@@ -129,7 +133,7 @@ bool CharacterAnimation::init(const std::string& plistFile, float frameDuration,
 
     //以下是监听器部分,注释部分还没有实际功能
     auto keyboardListener = EventListenerKeyboard::create();
-    //auto mouseListener = EventListenerMouse::create();
+    auto mouseListener = EventListenerMouse::create();
     keyboardListener->onKeyPressed = CC_CALLBACK_2(CharacterAnimation::onKeyPressed, this);
     keyboardListener->onKeyReleased = CC_CALLBACK_2(CharacterAnimation::onKeyReleased, this);
     //mouseListener->onMouseDown = CC_CALLBACK_1(CharacterAnimation::onMouseDown, this);
@@ -138,9 +142,10 @@ bool CharacterAnimation::init(const std::string& plistFile, float frameDuration,
     //mouseListener->onMouseScroll = CC_CALLBACK_1(CharacterAnimation::onMouseScroll, this);
     //_eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+    //_eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
     auto contactlistener=EventListenerPhysicsContact::create();
     contactlistener->onContactBegin = CC_CALLBACK_1(CharacterAnimation::onContactBegin, this);
-   this->_eventDispatcher->addEventListenerWithSceneGraphPriority(contactlistener, this);
+    this->_eventDispatcher->addEventListenerWithSceneGraphPriority(contactlistener, this);
     this->scheduleUpdate();//每帧调用update
 
 
@@ -240,13 +245,17 @@ void CharacterAnimation::update(float delta)
 void CharacterAnimation::onMouseDown(EventMouse* event)
 {
     EventMouse::MouseButton button = event->getMouseButton();
-    auto location = event->getLocation();
+    auto locate= event->getLocation();
     if (button == EventMouse::MouseButton::BUTTON_LEFT)
         isMouseButtonLeftPressed = true;
     if (button == EventMouse::MouseButton::BUTTON_RIGHT)
         isMouseButtonRightPressed = true;
-    MouseAbscissa = location.x;
-    MouseOrdinate = location.y;
+   
+   
+    auto x = event->getCursorX();
+    auto y = event->getCursorY();
+    if(!(x>=680 && x<=1160 && y>=180 && y<=225))
+       useTool();
 }
 void CharacterAnimation::onMouseUp(EventMouse* event)
 {
@@ -350,3 +359,161 @@ void CharacterAnimation::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* ev
     if (keyCode == EventKeyboard::KeyCode::KEY_9)
         isKey_9_Pressed = state;
 }
+
+char CharacterAnimation::get_facing()
+{
+    try {
+        if (CharacterD->isVisible()||CharacterDstop->isVisible())
+            return 'D';
+        if (CharacterL->isVisible()||CharacterLstop->isVisible())
+            return 'L';
+        if (CharacterU->isVisible()||CharacterUstop->isVisible())
+            return 'U';
+        if (CharacterR->isVisible()||CharacterRstop->isVisible())
+            return 'R';
+    }
+    catch (...) {
+        return 'N';
+    }
+    return 0;
+}
+
+void CharacterAnimation::useAxeToLeft() {
+    auto axe = Sprite::create("tools/axe.png");
+    axe->setScale(0.8);
+    axe->setPosition(this->getCharacterPosition().x-20, this->getCharacterPosition().y-10);
+    auto axeRotate = RotateBy::create(0.3, -50);
+    auto axeRemove = RemoveSelf::create();
+    auto seq = Sequence::create(axeRotate, axeRemove, nullptr);
+    this->addChild(axe);
+    axe->runAction(seq);
+}
+void CharacterAnimation::useAxeToRight() {
+    auto axe = Sprite::create("tools/axe.png");
+   axe->setScaleX(-0.8);
+    axe->setScaleY(0.8);
+    axe->setPosition(this->getCharacterPosition().x+20, this->getCharacterPosition().y-10);
+    auto axeRotate = RotateBy::create(0.3, 50);
+    auto axeRemove = RemoveSelf::create();
+    auto seq = Sequence::create(axeRotate, axeRemove, nullptr);
+    this->addChild(axe);
+    axe->runAction(seq);
+}
+
+void CharacterAnimation::usePickToLeft()
+{
+    auto pick = Sprite::create("tools/pick.png");
+    pick->setScale(0.8);
+    pick->setPosition(this->getCharacterPosition().x-20, this->getCharacterPosition().y-10);
+    auto pickRotate = RotateBy::create(0.3, -50);
+    auto pickRemove = RemoveSelf::create();
+    auto seq = Sequence::create(pickRotate, pickRemove, nullptr);
+    this->addChild(pick);
+    pick->runAction(seq);
+}
+
+void CharacterAnimation::usePickToRight()
+{
+    auto pick = Sprite::create("tools/pick.png");
+    pick->setScaleX(-0.8);
+    pick->setScaleY(0.8);
+    pick->setPosition(this->getCharacterPosition().x+20, this->getCharacterPosition().y-10);
+    auto pickRotate = RotateBy::create(0.3, 50);
+    auto pickRemove = RemoveSelf::create();
+    auto seq = Sequence::create(pickRotate, pickRemove, nullptr);
+    this->addChild(pick);
+    pick->runAction(seq);
+}
+
+void CharacterAnimation::useHoeToLeft()
+{
+    auto hoe = Sprite::create("tools/hoe.png");
+    hoe->setScale(0.8);
+    hoe->setPosition(this->getCharacterPosition().x-20, this->getCharacterPosition().y-10);
+    auto hoeRotate = RotateBy::create(0.3, -50);
+    auto hoeRemove = RemoveSelf::create();
+    auto seq = Sequence::create(hoeRotate, hoeRemove, nullptr);
+    this->addChild(hoe);
+    hoe->runAction(seq);
+}
+
+void CharacterAnimation::useHoeToRight()
+{
+    auto hoe = Sprite::create("tools/hoe.png");
+    hoe->setScaleX(-0.8);
+    hoe->setScaleY(0.8);
+    hoe->setPosition(this->getCharacterPosition().x+20, this->getCharacterPosition().y-10);
+    auto hoeRotate = RotateBy::create(0.3, 50);
+    auto hoeRemove = RemoveSelf::create();
+    auto seq = Sequence::create(hoeRotate, hoeRemove, nullptr);
+    this->addChild(hoe);
+    hoe->runAction(seq);
+}
+void CharacterAnimation::fetchWaterToLeft()
+{
+    auto water = Sprite::create("tools/bucket.png");
+    water->setScale(0.8);
+    water->setPosition(this->getCharacterPosition().x-20, this->getCharacterPosition().y-10);
+    auto waterRotate = RotateBy::create(0.3, -50);
+    auto waterRemove = RemoveSelf::create();
+    auto seq = Sequence::create(waterRotate, waterRemove, nullptr);
+    this->addChild(water);
+    water->runAction(seq);
+}
+
+void CharacterAnimation::fetchWaterToRight()
+{
+    auto water = Sprite::create("tools/bucket.png");
+    water->setScaleX(-0.8);
+    water->setScaleY(0.8);
+    water->setPosition(this->getCharacterPosition().x+20, this->getCharacterPosition().y-10);
+    auto waterRotate = RotateBy::create(0.3, 50);
+    auto waterRemove = RemoveSelf::create();
+    auto seq = Sequence::create(waterRotate, waterRemove, nullptr);
+    this->addChild(water);
+    water->runAction(seq);
+}
+
+void CharacterAnimation::useTool()
+{
+    char facing = get_facing();
+    if (facing == 'D' || facing == 'L') {
+        switch (this->now_item) {
+        case 1:
+            useAxeToLeft();
+            break;
+        case 2:
+            useHoeToLeft();
+            break;
+        case 3:
+            usePickToLeft();
+            break;
+        case 4:
+            fetchWaterToLeft();
+            break;
+        default:
+            break;
+        }
+    }
+    else if (facing == 'U' || facing == 'R') {
+        switch (this->now_item) {
+        case 1:
+            useAxeToRight();
+            break;
+        case 2:
+            useHoeToRight();
+            break;
+        case 3:
+            usePickToRight();
+            break;
+        case 4:
+            fetchWaterToRight();
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+
+
