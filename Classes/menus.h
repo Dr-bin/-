@@ -7,6 +7,19 @@ const int ItemNullTag = -1;
 const int ItemAxeTag = 1;
 const int ItemHoeTag = 2;
 const int ItemPickTag = 3;
+const int ItemBucketTag = 4;
+const int ItemPotatoSeedTag = 5;
+const int ItemPotatoTag = 6;
+const int ItemCarrotTag = 7;
+const int ItemCarrotSeedTag = 8;
+const int ItemPumpkinSeedTag = 9;
+const int ItemPumpkinTag = 10;
+const int ItemMilkTag = 11;
+const int ItemFishingRodTag = 12;
+const int ItemFish1Tag=13;
+const int ItemFish2Tag=14;
+const int ItemFish3Tag=15;
+
 
 /*使用方法：新建一个ItemLayer到scene中
 * Item类为物品栏物品的基类，新物品需要继承Item类并实现自己的init函数，并在init函数中添加自己的sprite和label
@@ -26,8 +39,10 @@ public:
 	Label* num_label;
 	int tag;
 	int num;
+	int sell_price;
+	int buy_price;
 };
-//物品栏斧子
+//物品栏斧子d
 class ItemAxe :public Item
 {
 public:
@@ -104,6 +119,32 @@ public:
 	CREATE_FUNC(ItemMilk);
 	virtual bool init();
 };
+//物品栏钓鱼竿
+class ItemFishingRod :public Item
+{
+public:
+	CREATE_FUNC(ItemFishingRod);
+	virtual bool init();
+};
+//物品栏鱼
+class ItemFish1 :public Item
+{
+public:
+	CREATE_FUNC(ItemFish1);
+	virtual bool init();
+};
+class ItemFish2 :public Item
+{
+public:
+	CREATE_FUNC(ItemFish2);
+	virtual bool init();
+};
+class ItemFish3 :public Item
+{
+public:
+	CREATE_FUNC(ItemFish3);
+	virtual bool init();
+};
 //菜单框
 class Menubox :public Node
 {
@@ -135,6 +176,9 @@ public:
 	virtual bool init();
 	Vector<SquareBox*> square_boxes;
 	int now_select;
+	int money;
+	Label* money_label;
+	void updateMoney(int money);
 	Item* getNowItem();
 	Sprite* cur;
 	Item* getItem(int tag);
@@ -142,8 +186,10 @@ public:
 	void removeItem(int pos, int num);
 	void selectItem(int pos);
 	int serchItem(int tag);
-	int onMouseDown(Event* event);
+	int onMouseDown(EventMouse* event, CharacterAnimation* player);
 };
+
+
 
 //游戏内物品栏层
 class ItemLayer :public Layer
@@ -153,4 +199,11 @@ public:
 	virtual bool init();
 	ItemBag* item_bag;
 
+};
+
+class ShopBox :public SquareBox {
+public:
+	CREATE_FUNC(ShopBox);
+	virtual bool init();
+	void addProduction(Item* item);
 };

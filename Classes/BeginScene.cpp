@@ -1,5 +1,5 @@
 #include "BeginScene.h"
-
+#include"PopupBase.h"
 bool BeginScene::init()
 {
 	if (!Scene::init())
@@ -34,6 +34,10 @@ bool BeginScene::init()
 	auto mouselistener = EventListenerMouse::create();
 	mouselistener->onMouseDown = CC_CALLBACK_1(BeginScene::onMouseDown, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(mouselistener, this);
+	/**/
+	auto pop =PopupBase::create();
+	pop->stimulateKey=EventKeyboard::KeyCode::KEY_ENTER;
+	this->addChild(pop,1000);
 	return true;
 	
 }

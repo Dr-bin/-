@@ -244,6 +244,7 @@ void CharacterAnimation::update(float delta)
 
 void CharacterAnimation::onMouseDown(EventMouse* event)
 {
+
     EventMouse::MouseButton button = event->getMouseButton();
     auto locate= event->getLocation();
     if (button == EventMouse::MouseButton::BUTTON_LEFT)
@@ -365,14 +366,15 @@ char CharacterAnimation::get_facing()
     try {
         if (CharacterD->isVisible()||CharacterDstop->isVisible())
             return 'D';
-        if (CharacterL->isVisible()||CharacterLstop->isVisible())
+        else if (CharacterL->isVisible()||CharacterLstop->isVisible())
             return 'L';
-        if (CharacterU->isVisible()||CharacterUstop->isVisible())
+        else if (CharacterU->isVisible()||CharacterUstop->isVisible())
             return 'U';
-        if (CharacterR->isVisible()||CharacterRstop->isVisible())
+        else if (CharacterR->isVisible()||CharacterRstop->isVisible())
             return 'R';
     }
     catch (...) {
+        log("error");
         return 'N';
     }
     return 0;
@@ -474,6 +476,31 @@ void CharacterAnimation::fetchWaterToRight()
     water->runAction(seq);
 }
 
+void CharacterAnimation::fishingToLeft()
+{
+    auto fishing = Sprite::create("tools/fishing_rod.png");
+    fishing->setScale(1.2);
+    fishing->setPosition(this->getCharacterPosition().x-20, this->getCharacterPosition().y-10);
+    auto fishingRotate = RotateBy::create(0.3, -50);
+    auto fishingRemove = RemoveSelf::create();
+    auto seq = Sequence::create(fishingRotate, fishingRemove, nullptr);
+    this->addChild(fishing);
+    fishing->runAction(seq);
+}
+
+void CharacterAnimation::fishingToRight()
+{
+    auto fishing = Sprite::create("tools/fishing_rod.png");
+    fishing->setScaleX(-1.2);
+    fishing->setScaleY(1.2);
+    fishing->setPosition(this->getCharacterPosition().x+20, this->getCharacterPosition().y-10);
+    auto fishingRotate = RotateBy::create(0.3, 50);
+    auto fishingRemove = RemoveSelf::create();
+    auto seq = Sequence::create(fishingRotate, fishingRemove, nullptr);
+    this->addChild(fishing);
+    fishing->runAction(seq);
+}
+
 void CharacterAnimation::useTool()
 {
     char facing = get_facing();
@@ -490,6 +517,9 @@ void CharacterAnimation::useTool()
             break;
         case 4:
             fetchWaterToLeft();
+            break;
+        case 12:
+            fishingToLeft();
             break;
         default:
             break;
@@ -508,6 +538,9 @@ void CharacterAnimation::useTool()
             break;
         case 4:
             fetchWaterToRight();
+            break;
+        case 12:
+            fishingToRight();
             break;
         default:
             break;

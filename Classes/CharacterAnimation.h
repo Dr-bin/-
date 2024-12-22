@@ -82,6 +82,8 @@ public:
     void useHoeToRight();
     void fetchWaterToLeft();
     void fetchWaterToRight();
+    void fishingToLeft();
+    void fishingToRight();
     void useTool();
     void wateringToLeft();
     void wateringToRight();

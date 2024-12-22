@@ -147,7 +147,6 @@ bool MapLayer::init() {
 	/*以下有改动*/
 	player = CharacterAnimation::create("farmer.plist", 0.2f, 2.0f, Vec2(200, 200));
 	this->addChild(player, 50);
-	player->Move(1);
 	mouse->onMouseDown = CC_CALLBACK_1(CharacterAnimation::onMouseDown, player);
 	return true;
 }

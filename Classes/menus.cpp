@@ -87,11 +87,14 @@ bool ItemAxe::init()
     if(!Item::init())
     return false;
     this->tag=1;
+    this->sell_price=5;
+    this->buy_price=10;
     num=1;
     this->name="Axe";
     this->item=Sprite::create("items/axe.png");
     this->item->setScale(0.4);
     this->addChild(this->item);
+    
     return true;
 }
 
@@ -101,6 +104,8 @@ bool ItemHoe::init()
     if(!Item::init())
     return false;
     this->tag=2;
+    this->sell_price=5;
+    this->buy_price=10;
     this->num=1;
     this->name="Hoe";
     this->item=Sprite::create("items/hoe.png");
@@ -114,6 +119,8 @@ bool ItemPick::init() {
     if(!Item::init())
     return false;
     this->tag=3;
+    this->sell_price = 5;
+    this->buy_price = 10;
     this->num=1;
     this->name="Pick";
     this->item=Sprite::create("items/pick.png");
@@ -128,6 +135,8 @@ bool ItemBucket::init()
     if(!Item::init())
     return false;
     this->tag=4;
+    this->sell_price = 5;
+    this->buy_price = 10;
     this->num=1;
     this->name="Bucket";
     this->item=Sprite::create("items/bucket.png");
@@ -172,13 +181,24 @@ bool ItemBag::init()
     addItem(6, 1);
     addItem(5, 2);
     addItem(7, 2);
-    addItem(8, 6);
-    addItem(9, 1);
-    addItem(10, 1);
-    addItem(11, 5);
-    addItem(9, 4);
     this->selectItem(0);
+    Sprite* money_box=Sprite::create("money_box.png");
+    money_box->setScaleX(3.3);
+    money_box->setScaleY(1.5);
+    money_box->setPosition(Vec2(1870,800));
+    this->addChild(money_box);
+    money_label = Label::create();
+    money_label->setPosition(Vec2(1865,800));
+    money_label->setScale(1.5);
+    this->addChild(money_label);
+    updateMoney(30);
     return true;
+}
+
+void ItemBag::updateMoney(int money)
+{
+    money_label->setString("Money: "+std::to_string(money));
+    this->money = money;
 }
 
 // 获取当前选中的物品
@@ -227,6 +247,18 @@ Item* ItemBag::getItem(int tag)
         break;
     case 11:
         return ItemMilk::create();
+        break;
+    case 12:
+        return ItemFishingRod::create();
+        break;
+    case 13:
+        return ItemFish1::create();
+        break;
+    case 14:
+        return ItemFish2::create();
+        break;
+    case 15:
+        return ItemFish3::create();
         break;
     default:
         break;
@@ -312,18 +344,21 @@ int ItemBag::serchItem(int tag)
 }
 
 // 鼠标点击事件处理
-int ItemBag::onMouseDown(Event* event)
+int ItemBag::onMouseDown(EventMouse* event,CharacterAnimation* player)
 {
     try {
-        auto mouse_event = static_cast<EventMouse*>(event);
+        auto mouse_event = event;
         int x = mouse_event->getCursorX();
         int y = mouse_event->getCursorY();
         if (x >= 680 && x <= 1160 && y >= 180 && y <= 225) {
             int pos = (x - 680) / 40;
             selectItem(pos);
             if (square_boxes.at(pos)->content != nullptr) {
+                log("%d", square_boxes.at(pos)->content->tag);
+                player->now_item = square_boxes.at(pos)->content->tag;
                 return square_boxes.at(pos)->content->tag;
             }
+            
 
         }
     }
@@ -339,6 +374,8 @@ bool ItemPotatoSeed::init()
     if(!Item::init())
     return false;
     this->tag=5;
+    this->sell_price=1;
+    this->buy_price=2;
     this->num=1;
     this->name="Potato Seed";
     this->item=Sprite::create("items/potato_seed.png");
@@ -353,6 +390,8 @@ bool ItemPotato::init()
     if(!Item::init())
     return false;
     this->tag=6;
+    this->sell_price=5;
+    this->buy_price=7;
     this->num=1;
     this->name="Potato";
     this->item=Sprite::create("items/potato.png");
@@ -367,6 +406,8 @@ bool ItemCarrot::init()
     if(!Item::init())
     return false;
     this->tag=7;
+    this->sell_price=5;
+    this->buy_price=7;
     this->num = 1;
     this->name = "Carrot";
     this->item = Sprite::create("items/carrot.png");
@@ -381,6 +422,8 @@ bool ItemCarrotSeed::init()
     if(!Item::init())
     return false;
     this->tag=8;
+    this->sell_price=1;
+    this->buy_price=2;
     this->num = 1;
     this->name = "Carrot Seed";
     this->item = Sprite::create("items/carrot_seed.png");
@@ -395,6 +438,8 @@ bool ItemPumpkinSeed::init()
     if(!Item::init())
     return false;
     this->tag=9;
+    this->sell_price=1;
+    this->buy_price=2;
     this->num = 1;
     this->name = "Pumpkin Seed";
     this->item = Sprite::create("items/pumpkin_seed.png");
@@ -409,6 +454,8 @@ bool ItemPumpkin::init()
     if(!Item::init())
     return false;
     this->tag=10;
+    this->sell_price=5;
+    this->buy_price=7;
     this->num = 1;
     this->name = "Pumpkin";
     this->item = Sprite::create("items/pumpkin.png");
@@ -423,10 +470,94 @@ bool ItemMilk::init()
     if(!Item::init())
     return false;
     this->tag=11;
+    this->sell_price=10;
+    this->buy_price=15;
     this->num = 1;
     this->name = "Milk";
     this->item = Sprite::create("items/milk.png");
     this->item->setScale(1.5);
     this->addChild(this->item);
     return true;
+}
+
+bool ItemFishingRod::init()
+{
+    if(!Item::init())
+    return false;
+    this->tag=12;
+    this->sell_price=10;
+    this->buy_price=15;
+    this->num = 1;
+    this->name = "Fishing Rod";
+    this->item = Sprite::create("items/fishing_rod.png");
+    this->item->setScale(1.5);
+    this->addChild(this->item);
+    return true;
+}
+
+bool ItemFish1::init()
+{
+    if(!Item::init())
+    return false;
+    this->tag=13;
+    this->sell_price=5;
+    this->buy_price=8;
+    this->num = 1;
+    this->name = "Fish1";
+    this->item = Sprite::create("items/fish1.png");
+    this->item->setScale(0.10);
+    this->addChild(this->item);
+    return true;
+}
+
+bool ItemFish2::init()
+{
+    if(!Item::init())
+    return false;
+    this->tag=14;
+    this->sell_price=10;
+    this->buy_price=13;
+    this->num = 1;
+    this->name = "Fish2";
+    this->item = Sprite::create("items/fish2.png");
+    this->item->setScale(0.10);
+    this->addChild(this->item);
+    return true;
+}
+
+bool ItemFish3::init()
+{
+    if(!Item::init())
+    return false;
+    this->tag=15;
+    this->sell_price=20;
+    this->buy_price=25;
+    this->num = 1;
+    this->name = "Fish3";
+    this->item = Sprite::create("items/fish3.png");
+    this->item->setScale(0.10);
+    this->addChild(this->item);
+    return true;
+}
+
+bool ShopBox::init()
+{
+    if(!SquareBox::init())
+    return false;
+}
+
+void ShopBox::addProduction(Item* item)
+{
+    this->addContent(item);
+    Label* buy_price_label = Label::create();
+    buy_price_label->setPosition(this->box->getPosition()+Vec2(80,10));
+    std::string buy_price = std::to_string(item->buy_price);
+    buy_price="Buy Price: "+buy_price+"G";
+    buy_price_label->setString(buy_price);
+    this->addChild(buy_price_label);
+    std::string sell_price = std::to_string(item->sell_price);
+    Label* sell_price_label = Label::create();
+    sell_price_label->setPosition(this->box->getPosition()+Vec2(80,-10));
+    sell_price_label->setString("Sell Price: "+sell_price+"G");
+    this->addChild(sell_price_label);
 }
