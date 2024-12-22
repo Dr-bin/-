@@ -151,7 +151,6 @@ void PopupShop::onShow()
     setShopBoxs(tags);
     _mouse= EventListenerMouse::create();
     _mouse->onMouseDown = CC_CALLBACK_1(PopupShop::OnMouseDown, this);
-   
     Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_mouse, this);
     
 }

@@ -114,7 +114,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //auto scene = SpriteScene::create();
 
     // run
-    auto mapscene =createMapScene();
+    //auto mapscene =createMapScene();
     auto gamescene = GameScene::create();
     auto beginscene = BeginScene::create();
     director->runWithScene(beginscene);

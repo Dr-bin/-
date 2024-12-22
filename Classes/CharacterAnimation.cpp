@@ -224,19 +224,19 @@ void CharacterAnimation::update(float delta)
     //ÉÏÏÂ×óÓÒ
     if (isKeyWPressed) {
         this->Move(1);
-        this->runAction(MoveBy::create(0.01f, Vec2(0, 1.4)));
+        this->runAction(MoveBy::create(0.01f, Vec2(0, 4.0)));
     }
     if (isKeySPressed) {
         this->Move(2);
-        this->runAction(MoveBy::create(0.01f, Vec2(0, -1.4)));
+        this->runAction(MoveBy::create(0.01f, Vec2(0, -4.0)));
     }
     if (isKeyAPressed) {
         this->Move(3);
-        this->runAction(MoveBy::create(0.01f, Vec2(-1.4, 0)));
+        this->runAction(MoveBy::create(0.01f, Vec2(-4.0, 0)));
     }
     if (isKeyDPressed) {
         this->Move(4);
-        this->runAction(MoveBy::create(0.01f, Vec2(1.4, 0)));
+        this->runAction(MoveBy::create(0.01f, Vec2(4.0, 0)));
     }
     return;
 }
@@ -389,6 +389,7 @@ void CharacterAnimation::useAxeToLeft() {
     auto seq = Sequence::create(axeRotate, axeRemove, nullptr);
     this->addChild(axe);
     axe->runAction(seq);
+    this->axeTimes++;
 }
 void CharacterAnimation::useAxeToRight() {
     auto axe = Sprite::create("tools/axe.png");
@@ -400,6 +401,7 @@ void CharacterAnimation::useAxeToRight() {
     auto seq = Sequence::create(axeRotate, axeRemove, nullptr);
     this->addChild(axe);
     axe->runAction(seq);
+    axeTimes++;
 }
 
 void CharacterAnimation::usePickToLeft()
@@ -412,6 +414,7 @@ void CharacterAnimation::usePickToLeft()
     auto seq = Sequence::create(pickRotate, pickRemove, nullptr);
     this->addChild(pick);
     pick->runAction(seq);
+    pickTimes++;
 }
 
 void CharacterAnimation::usePickToRight()
@@ -425,6 +428,7 @@ void CharacterAnimation::usePickToRight()
     auto seq = Sequence::create(pickRotate, pickRemove, nullptr);
     this->addChild(pick);
     pick->runAction(seq);
+    pickTimes++;
 }
 
 void CharacterAnimation::useHoeToLeft()
@@ -437,6 +441,7 @@ void CharacterAnimation::useHoeToLeft()
     auto seq = Sequence::create(hoeRotate, hoeRemove, nullptr);
     this->addChild(hoe);
     hoe->runAction(seq);
+    hoeTimes++;
 }
 
 void CharacterAnimation::useHoeToRight()
@@ -450,6 +455,7 @@ void CharacterAnimation::useHoeToRight()
     auto seq = Sequence::create(hoeRotate, hoeRemove, nullptr);
     this->addChild(hoe);
     hoe->runAction(seq);
+    hoeTimes++;
 }
 void CharacterAnimation::fetchWaterToLeft()
 {
@@ -486,6 +492,7 @@ void CharacterAnimation::fishingToLeft()
     auto seq = Sequence::create(fishingRotate, fishingRemove, nullptr);
     this->addChild(fishing);
     fishing->runAction(seq);
+    fishTimes++;
 }
 
 void CharacterAnimation::fishingToRight()
@@ -499,6 +506,7 @@ void CharacterAnimation::fishingToRight()
     auto seq = Sequence::create(fishingRotate, fishingRemove, nullptr);
     this->addChild(fishing);
     fishing->runAction(seq);
+    fishTimes++;
 }
 
 void CharacterAnimation::useTool()
