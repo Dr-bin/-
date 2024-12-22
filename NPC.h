@@ -71,7 +71,7 @@ public:
         // 生成随机数
         return (float)dis(gen);
     };
-    int getRandomRepeatTime() {return rand() % 3 + 3; };
+    int getRandomRepeatTime() {return rand() % 3 + 10; };
     bool isAlive() { return _isAlive; }
     double getFriendship() const { return friendship; }
     void addFriendship(int value);

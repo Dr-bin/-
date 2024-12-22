@@ -14,10 +14,10 @@ class TaskWindowLayer;
 class NPCManager : public Layer {
 private:
     Vector<NPC*> npcs; // 存储所有的NPC
-    int xStart = 1100;
+    int xStart = 400;
     int xEnd = 1300;
     int yStart = 200;
-    int yEnd = 450;
+    int yEnd = 1000;
 
 public:
     // 初始化事件监听

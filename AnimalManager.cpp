@@ -115,7 +115,7 @@ void AnimalManager::addNewAnimal(const std::string& animalType)
 	Animal* newAnimal = nullptr;
 	if (animalType == "Cow")
 	{
-		newAnimal = Cow::create(Vec2(100, 200));
+		newAnimal = Cow::create(position);
 	}
 	else if (animalType == "Sheep")
 	{

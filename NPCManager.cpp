@@ -115,13 +115,3 @@ void NPCManager::showTaskWindow(NPC* npc) {
     auto taskWindow = TaskWindowLayer::create(npc);
     Director::getInstance()->getRunningScene()->addChild(taskWindow);
 }
-//void NPCManager::checkRightNPCs(Vec2 clickPosition) {
-//      for (auto npc : npcs) {
-//        if (npc->getCurrentSprite()->getBoundingBox().containsPoint(clickPosition)) {
-//            npc->turnTaskBar();
-//            auto taskbar = PopupBase::create();
-//            taskbar->show();
-//            break;
-//        }
-//    }
-//}
