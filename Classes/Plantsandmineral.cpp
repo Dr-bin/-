@@ -20,11 +20,12 @@ bool Plant::init(const std::string& springSprite, const std::string& summerSprit
 {
     if (!cocos2d::Node::init())
         return false;
+
     _spriteSpring = cocos2d::Sprite::create(springSprite);
     _spriteSummer = cocos2d::Sprite::create(summerSprite);
     _spriteAutumn = cocos2d::Sprite::create(autumnSprite);
     _spriteWinter = cocos2d::Sprite::create(winterSprite);
-    _originalContentSize = _spriteSpring->getContentSize();
+
     if (_spriteSpring && _spriteSummer && _spriteAutumn && _spriteWinter)
     {
         _spriteWinter->setVisible(false);
@@ -38,24 +39,21 @@ bool Plant::init(const std::string& springSprite, const std::string& summerSprit
         _health = 3;
         _currentSeason = 0;
         _isTregger = 0;
-        this->scheduleUpdate();
-        _scaleFactor = 1.0f;
-        //this->schedule(CC_SCHEDULE_SELECTOR(Plant::updateSeason), switchtime);
         return true;
     }
     return false;
 }
 //控制季节变换
-void Plant::update(float dt)
+void Plant::updateSeasons(float dt)
 {
     if (_isTregger)
         return;
+    static float timeSinceLastSeasonChange = 0.0f;
     timeSinceLastSeasonChange += dt;
-    //timeSinceLastSeasonChange >= switchtime &&
+
     // 检查是否已经过去了switchtime秒
     if (timeSinceLastSeasonChange >= switchtime && !_isTregger)
     {
-        CCLOG("1");
         timeSinceLastSeasonChange = 0.0f; // 重置计时器
         _currentSeason = (_currentSeason + 1) % 4; // 循环季节
         switchSeason(_currentSeason);
@@ -92,12 +90,12 @@ void Plant::damage(int amount) {
     _health -= amount;
     if (_health <= 0) {
         _isTregger = 1;
-        Disappear();
+        fallDownAndDisappear();
         return;
     }
 }
 // 树倒下和消失的动画
-void Plant::Disappear()
+void Plant::fallDownAndDisappear()
 {
     auto toRight = cocos2d::MoveBy::create(0.2f, cocos2d::Vec2(20, 0)); // 向右移动
     auto rotate = cocos2d::RotateTo::create(0.1f, 90); // 旋转90度
@@ -107,22 +105,17 @@ void Plant::Disappear()
     //auto spawn = cocos2d::Spawn::create(sequence, call, nullptr); // 同时执行
     //removeThis();
     _currentSprite->runAction(sequence);
+    //removeThis();
     return;
 }
 // 移除自身的函数
-void Plant::removeThis() 
-{
+void Plant::removeThis() {
     this->removeFromParent();
-}
-Size Plant::getcontentSize()
-{
-    // 返回缩放后的内容大小
-    return Size(_originalContentSize.width * _scaleFactor, _originalContentSize.height * _scaleFactor);
 }
 
 
 // 创建矿石实例
-Mineral* Mineral::create(const string& spriteFile)
+Mineral* Mineral::create(const std::string& spriteFile)
 {
     Mineral* mineral = new Mineral();
     if (mineral && mineral->init(spriteFile)) {
@@ -133,19 +126,17 @@ Mineral* Mineral::create(const string& spriteFile)
     return nullptr;
 }
 // 初始化矿石
-bool Mineral:: init(const string& spriteFile)
+bool Mineral:: init(const std::string& spriteFile)
 {
     if (!cocos2d::Node::init())
         return false;
-    _sprite = Sprite::create(spriteFile);
+    _sprite = cocos2d::Sprite::create(spriteFile);
     if (_sprite)
     {
         addChild(_sprite);
         _sprite->setVisible(true);
         _state = 1;
         _health = 3;
-        _scaleFactor = 1.0;
-        _originalContentSize = _sprite->getContentSize();
         return true;
     }
     return false;
@@ -175,18 +166,13 @@ void Mineral::removeThis()
 {
     this->removeFromParent();
 }
-Size Mineral::getcontentSize()
-{
-    // 返回缩放后的内容大小
-    return Size(_originalContentSize.width * _scaleFactor, _originalContentSize.height * _scaleFactor);
-}
 
 
 // 创建作物实例
-Crop* Crop::create(const string& seedSprite, const string& youngSprite, const string& matureSprite, const string& finalSprite)
+Crop* Crop::create(const string& seedSprite, const string& youngSprite, const string& matureSprite, const string& deadSprite)
 {
     Crop* crop = new Crop();
-    if (crop && crop->init(seedSprite,youngSprite,matureSprite,finalSprite))
+    if (crop && crop->init(seedSprite,youngSprite,matureSprite,deadSprite))
     {
         crop->autorelease();
         return crop;
@@ -195,64 +181,52 @@ Crop* Crop::create(const string& seedSprite, const string& youngSprite, const st
     return nullptr;
 }
 // 初始化作物
-bool Crop::init(const string& seedSprite, const string& youngSprite, const string& matureSprite, const string& finalSprite)
+bool Crop::init(const string& seedSprite, const string& youngSprite, const string& matureSprite, const string& deadSprite)
 {
-    if (!Node::init())
+    if (!cocos2d::Node::init())
         return false;
-    _seedSprite = Sprite::create(seedSprite);
-    _youngSprite = Sprite::create(youngSprite);
-    _matureSprite = Sprite::create(matureSprite);
-    _finalSprite = Sprite::create(finalSprite);
-    _deadSprite = Sprite::create("crop/crop_dead.png");
-    _originalContentSize = _seedSprite->getContentSize();
-    if (_seedSprite && _youngSprite && _matureSprite && _finalSprite&&_deadSprite)
+
+    _seedSprite = cocos2d::Sprite::create(seedSprite);
+    _youngSprite = cocos2d::Sprite::create(youngSprite);
+    _matureSprite = cocos2d::Sprite::create(matureSprite);
+    _deadSprite = cocos2d::Sprite::create(deadSprite);
+
+    if (_seedSprite && _youngSprite && _matureSprite && _deadSprite)
     {
-        _finalSprite->setVisible(false);
+        _deadSprite->setVisible(false);
         _youngSprite->setVisible(false);
         _matureSprite->setVisible(false);
-        _deadSprite->setVisible(false);
-        addChild(_seedSprite);
+        addChild(_deadSprite);
         addChild(_youngSprite);
         addChild(_matureSprite);
-        addChild(_finalSprite);
         addChild(_deadSprite);
         _currentSprite = _seedSprite; // 默认显示种子
         _growthstage = 1;    //种子状态
         ifgrow = 1;    //默认为成长状态
-        growspeed = 2;
         _health = 10;
         ifripe = 0;    //还未成熟
         ifwithered = 0;    //并未枯萎
-        _scaleFactor = 1.0f;
-        this->scheduleUpdate();
+        this->schedule(CC_SCHEDULE_SELECTOR(Crop::updatastage), switchtime);
         return true;
     }
     return false;
 }
 // 更新作物状态
-void Crop::update(float dt)
+void Crop::updatastage(float dt)
 {
     if (ifwithered)    //如果作物已经枯萎，转态无需更新
         return;
-    timeSince += dt;
-    if (irrigatetime > 0.0)
-    {
-        irrigatetime -= dt;
-        if (irrigatetime <= 0.0)
-        {
-            irrigatetime = 0.0;
-            growspeed = 1;
-        }
-    }
+    static float timeSinceLastSeasonChange = 0.0f;
+    timeSinceLastSeasonChange += dt;
+
     // 检查是否已经过去了switchtime秒
-    if (timeSince >= 1.0)    //每1s变化一次
+    if (timeSinceLastSeasonChange >= switchtime)
     {
-        timeSince = 0.0f; // 重置计时器
+        timeSinceLastSeasonChange = 0.0f; // 重置计时器
         if (ifgrow)
         {
-            if (!ifripe&&_health<=40)
-                _health += growspeed;
-            //log("%d %d", _health, _growthstage);
+            if(!ifripe)
+                _health++;
         }
         else
         {
@@ -262,13 +236,13 @@ void Crop::update(float dt)
         {
             ifwithered = 1;
             _growthstage = 0;
-            switchwithered();
+            switchstage();
         }
         if (_growthstage < _health / 10)
         {
-            _growthstage++;
+            ifgrow++;
             switchstage();
-            if (_growthstage == 4)
+            if (ifgrow == 3)
                 ifripe = 1;
         }
     }
@@ -276,9 +250,13 @@ void Crop::update(float dt)
 //更新作物状态
 void Crop::switchstage()
 {
-    //log("%d", _growthstage);
     switch (_growthstage)
     {
+        case 0:
+            _currentSprite->setVisible(false);
+            _deadSprite->setVisible(true);
+            _currentSprite = _deadSprite;
+            break;
         case 2:
             _currentSprite->setVisible(false);
             _youngSprite->setVisible(true);
@@ -289,24 +267,7 @@ void Crop::switchstage()
             _matureSprite->setVisible(true);
             _currentSprite = _matureSprite;
             break;
-        case 4:
-            _currentSprite->setVisible(false);
-            _finalSprite->setVisible(true);
-            _currentSprite = _finalSprite;
-            break;
     }
-}
-//作物被摧毁
-void Crop::damage(int amout)
-{
-    Disappear();
-}
-//作物枯萎
-void Crop::switchwithered()
-{
-    _currentSprite->setVisible(false);
-    _deadSprite->setVisible(true);
-    _currentSprite = _deadSprite;
 }
 // 作物消失
 void Crop::Disappear()
@@ -333,15 +294,4 @@ void Crop::removeThis()
 {
     this->removeFromParent();
 }
-//获取作物状态
-int Crop::getstage()
-{
-    return _growthstage;
-}
-Size Crop::getcontentSize()
-{
-    // 返回缩放后的内容大小
-    return Size(_originalContentSize.width * _scaleFactor, _originalContentSize.height * _scaleFactor);
-}
-
 

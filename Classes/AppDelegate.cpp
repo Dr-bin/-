@@ -27,7 +27,7 @@
 //#include "SpriteTemp.h"
 // #define USE_AUDIO_ENGINE 1
 #include"maptry.h"
-#include"menus.h"
+#include"Itemlayer.h"
 #include"GameScene.h"
 #include"BeginScene.h"
 #if USE_AUDIO_ENGINE
@@ -114,7 +114,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //auto scene = SpriteScene::create();
 
     // run
-    //auto mapscene =createMapScene();
+    auto mapscene =createMapScene();
     auto gamescene = GameScene::create();
     auto beginscene = BeginScene::create();
     director->runWithScene(beginscene);

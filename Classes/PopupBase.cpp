@@ -1,5 +1,4 @@
 #include "PopupBase.h"
-#include"menus.h"
 
 // 静态变量，用于跟踪当前显示的弹窗
 PopupBase* PopupBase::currentPopup = nullptr;
@@ -151,6 +150,7 @@ void PopupShop::onShow()
     setShopBoxs(tags);
     _mouse= EventListenerMouse::create();
     _mouse->onMouseDown = CC_CALLBACK_1(PopupShop::OnMouseDown, this);
+   
     Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_mouse, this);
     
 }

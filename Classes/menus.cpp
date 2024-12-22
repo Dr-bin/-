@@ -144,16 +144,6 @@ bool ItemBucket::init()
     this->addChild(this->item);
     return true;
 }
-
-// ItemLayer类的初始化方法
-bool ItemLayer::init()
-{
-    if(!Layer::init())
-    return false;
-    item_bag = ItemBag::create();
-    this->addChild(item_bag);
-    return true;
-}
  
 
 // ItemBag类的初始化方法
@@ -259,6 +249,9 @@ Item* ItemBag::getItem(int tag)
         break;
     case 15:
         return ItemFish3::create();
+        break;
+    case 50:
+        return ItemGarbage::create();
         break;
     default:
         break;
@@ -535,6 +528,21 @@ bool ItemFish3::init()
     this->num = 1;
     this->name = "Fish3";
     this->item = Sprite::create("items/fish3.png");
+    this->item->setScale(0.10);
+    this->addChild(this->item);
+    return true;
+}
+
+bool ItemGarbage::init()
+{
+    if (!Item::init())
+        return false;
+    this->tag = 50;
+    this->sell_price = -1;
+    this->buy_price = 1;
+    this->num = 1;
+    this->name = "Garbage";
+    this->item = Sprite::create("items/garbage.png");
     this->item->setScale(0.10);
     this->addChild(this->item);
     return true;

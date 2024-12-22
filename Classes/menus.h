@@ -3,6 +3,8 @@
 #include"maptry.h"
 USING_NS_CC;
 //物品栏标签
+#define GARBAGE 50
+const int MaxItemNum = 15;
 const int ItemNullTag = -1;
 const int ItemAxeTag = 1;
 const int ItemHoeTag = 2;
@@ -145,6 +147,12 @@ public:
 	CREATE_FUNC(ItemFish3);
 	virtual bool init();
 };
+class ItemGarbage :public Item
+{
+public:
+	CREATE_FUNC(ItemGarbage);
+	virtual bool init();
+};
 //菜单框
 class Menubox :public Node
 {
@@ -175,7 +183,7 @@ public:
 	CREATE_FUNC(ItemBag);
 	virtual bool init();
 	Vector<SquareBox*> square_boxes;
-	int now_select;
+	int now_select = 1;
 	int money;
 	Label* money_label;
 	void updateMoney(int money);
@@ -191,15 +199,7 @@ public:
 
 
 
-//游戏内物品栏层
-class ItemLayer :public Layer
-{
-public:
-	CREATE_FUNC(ItemLayer);
-	virtual bool init();
-	ItemBag* item_bag;
 
-};
 
 class ShopBox :public SquareBox {
 public:

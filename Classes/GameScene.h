@@ -1,6 +1,7 @@
 #pragma once
 #include"cocos2d.h"
-#include"menus.h"
+#include "menus.h"
+#include"ItemLayer.h"
 #include"maptry.h"
 #include"PopupBase.h"
 USING_NS_CC;
