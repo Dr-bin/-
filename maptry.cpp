@@ -519,7 +519,6 @@ void FarmMap::onMouseDown(EventMouse* event,int nowtool)
 						if (treenode->_isTregger == 0)
 						{
 							treenode->damage(1);
-							ifproceed = true;
 							if (treenode->_isTregger == 1)
 							{
 								Plant* temp[40] = { nullptr };
@@ -539,6 +538,7 @@ void FarmMap::onMouseDown(EventMouse* event,int nowtool)
 						}
 					}
 				}
+				ifproceed = true;
 			}
 		}
 		Crop* cropnode = checkcropNode(event, &number);
@@ -657,8 +657,9 @@ void FarmMap::onMouseDown(EventMouse* event,int nowtool)
 						addChild(land, 10);
 						landstatus[cropy][cropx] = 2;
 					}
+					ifproceed = true;
 				}
-				ifproceed = true;
+				
 			}
 		}
 		// ÖÖµØÂß¼­
@@ -673,6 +674,7 @@ void FarmMap::onMouseDown(EventMouse* event,int nowtool)
 					float chx = ch->getPosition().x, chy = ch->getPosition().y;
 					float x1 = 200.0 + cropx * 40 - 25, y1 = 200.0 + cropy * 40 - 25;
 					float x2 = 200.0 + cropx * 40 + 40 + 25, y2 = 200.0 + cropy * 40 + 40 + 25;
+					log("seed");
 					log("%f %f", x1, y1);
 					log("%f %f", x2, y2);
 					log("%f %f", chx, chy);
@@ -688,8 +690,8 @@ void FarmMap::onMouseDown(EventMouse* event,int nowtool)
 						landstatus[cropy][cropx] = 2;
 						allcrop[cropnum++] = crop;	
 					}
+					ifproceed = true;
 				}
-				ifproceed = true;
 			}
 		}
 	}
