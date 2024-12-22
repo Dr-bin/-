@@ -119,7 +119,7 @@ void AnimalManager::addNewAnimal(const std::string& animalType)
 	}
 	else if (animalType == "Sheep")
 	{
-		newAnimal = Sheep::create(Vec2(50, 200));
+		newAnimal = Sheep::create(position);
 	}
 	else if (animalType == "Chicken")
 	{
@@ -132,7 +132,7 @@ void AnimalManager::addNewAnimal(const std::string& animalType)
 	}
 	else if (animalType == "Dog")
 	{
-		newAnimal = Dog::create(Vec2(100, 50));
+		newAnimal = Dog::create(position);
 	}
 	else if (animalType == "Cat")
 	{
