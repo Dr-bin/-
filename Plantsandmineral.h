@@ -1,12 +1,18 @@
 #pragma once
 #include "cocos2d.h"
+#include"ui/CocosGUI.h"
 using namespace std;
 USING_NS_CC;
-//原生植物类，四个季节有四个显示
-class Plant : public cocos2d::Node
+
+class stillobject :public Node
 {
 public:
-
+    int identity;
+};
+//原生植物类，四个季节有四个显示
+class Plant : public stillobject
+{
+public:
     // 创建植物实例
     static Plant* create(const string& springSprite, const string& summerSprite,
         const string& autumnSprite, const string& winterSprite);
@@ -33,9 +39,20 @@ public:
     void fallDownAndDisappear();
     // 移除自身的函数
     void removeThis();
+    void setScale(float scale) 
+    {
+        // 调用基类的setScale方法进行缩放
+        Node::setScale(scale);
+        // 更新缩放因子
+        _scaleFactor *= scale;
+    }
+    Size getcontentSize();
+private:
+    Size _originalContentSize; // 原始内容大小
+    float _scaleFactor; // 缩放因子
 };
 //矿石类，可以被开采
-class Mineral : public cocos2d::Node 
+class Mineral : public stillobject
 {
 public:
     // 创建矿石实例
@@ -44,17 +61,27 @@ public:
     bool init(const string& spriteFile);
     // 减少生命值
     void damage(int amount);
+    void setScale(float scale)
+    {
+        // 调用基类的setScale方法进行缩放
+        Node::setScale(scale);
+        // 更新缩放因子
+        _scaleFactor *= scale;
+    }
+    Size getcontentSize();
+    int _state;    //矿石的状态，0为被破坏，1为完整
 private:
     Sprite* _sprite;
     int _health;
-    int _state;    //矿石的状态，0为被破坏，1为完整
+    Size _originalContentSize; // 原始内容大小
+    float _scaleFactor; // 缩放因子
     // 开采矿石
     void Disappear();
     //移除自身
     void removeThis();
 };
 //作物类，可以成长
-class Crop : public cocos2d::Node
+class Crop : public stillobject
 {
 public:
     //创建作物实例
@@ -66,23 +93,52 @@ public:
     {
         ifgrow = if_grow;
     }
+    void setScale(float scale)
+    {
+        // 调用基类的setScale方法进行缩放
+        Node::setScale(scale);
+        // 更新缩放因子
+        _scaleFactor *= scale;
+    }
     //更新作物状态
-    void updatastage(float dt);
+    void update(float dt);
     //转换作物状态
     void switchstage();
+    Size getcontentSize();
+    //得到灌溉后加速成长
+    void plusspeed()
+    {
+        growspeed = 2;
+        irrigatetime = 3.1;
+    }
+    //被摧毁
+    void damage();
+    //获取作物状态
+    int getstage();
+    void Pick();
+    void setifgrow(bool a)
+    {
+        ifgrow = a;
+    }
 private:
     Sprite* _seedSprite;
     Sprite* _youngSprite;
     Sprite* _matureSprite;
-    Sprite* _deadSprite;
+    Sprite* _finalSprite;
     Sprite* _currentSprite;
+    Sprite* _deadSprite;
+    float timeSince = 0.0f;
     int _growthstage;
     int _health;
     float switchtime = 10.0f;
     bool ifgrow;    //是否为成长状态
+    int growspeed;    //成长速度
     bool ifripe;    //是否成熟
     bool ifwithered;   //是否枯萎
+    float irrigatetime = 0.0;
     void Disappear();
-    void Pick();
     void removeThis();
+    void switchwithered();
+    Size _originalContentSize; // 原始内容大小
+    float _scaleFactor; // 缩放因子
 };
