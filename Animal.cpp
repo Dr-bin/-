@@ -1,13 +1,11 @@
 #include"Animal.h"
 
 
-#include "Animal.h"
-
 bool Animal::init(Vec2 startPosition)
 {
 	if (!Node::init())
 		return false;
-
+	scheduleUpdate();
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(_plistFile);
 
 	// 导入动画和精灵
@@ -24,6 +22,11 @@ bool Animal::init(Vec2 startPosition)
 	_moveLeftSprite->setVisible(false);
 	_moveDownSprite->setVisible(false);
 
+	_moveUpSprite->setScale(2.0);
+	_moveLeftSprite->setScale(2.0);
+	_moveDownSprite->setScale(2.0);
+	_moveRightSprite->setScale(2.0);
+
 	addChild(_moveRightSprite);
 	addChild(_moveUpSprite);
 	addChild(_moveLeftSprite);
@@ -32,6 +35,7 @@ bool Animal::init(Vec2 startPosition)
 	_currentSprite = _moveRightSprite;
 	_moveCount = 0;
 	_isAlive = 1;
+	_currentFrame = 0;
 	//this->schedule(CC_SCHEDULE_SELECTOR(Animal::moveAround), 4.0f, 8, 0);
 	return true;
 }
@@ -98,7 +102,7 @@ void Animal::createAnimations()
 	for (int i = 16; i <= 19 && i < _images.size(); i++) {
 		lieDownFrames.pushBack(_images.at(i));
 	}
-	_animationCache->addAnimation(Animation::createWithSpriteFrames(lieDownFrames, delayPerUnit), "lieDown");
+	_animationCache->addAnimation(Animation::createWithSpriteFrames(lieDownFrames, delayPerUnit), type + "-" + "lieDown");
 
 	// 创建睡觉动画（没有必要）
 	Vector<SpriteFrame*> sleepFrames;
@@ -123,31 +127,33 @@ float Animal::getRandomWaitTime()
 	return (float)dis(gen);
 }
 
-Vec2 Animal::getRandomDistance(Vec2 currentPosition, const std::string& direction)
-{
-	std::random_device rd;  // 用于生成随机种子
-	std::mt19937 gen(rd()); // 使用 Mersenne Twister 算法
-	if (direction == "right") {
-		std::uniform_real_distribution<> dis(0.0f, _width-currentPosition.x);
-		return Vec2(dis(gen), 0);
-	}
-	else if (direction == "up") {
-		std::uniform_real_distribution<> dis(0.0f, _height-currentPosition.y);
-		return Vec2(0, dis(gen));
-	}
-	else if (direction == "left") {
-		std::uniform_real_distribution<> dis(0.0f, currentPosition.x);
-		return Vec2(-dis(gen), 0);
-	}
-	else if (direction == "down") {
-		std::uniform_real_distribution<> dis(0.0f, currentPosition.y);
-		return Vec2(0, -dis(gen));
-	}
-	return Vec2(0, 0);
-}
-
+//Vec2 Animal::getRandomDistance(Vec2 currentPosition, const std::string& direction)
+//{
+//	std::random_device rd;  // 用于生成随机种子
+//	std::mt19937 gen(rd()); // 使用 Mersenne Twister 算法
+//	if (direction == "right") {
+//		std::uniform_real_distribution<> dis(0.0f, _width-currentPosition.x);
+//		return Vec2(dis(gen), 0);
+//	}
+//	else if (direction == "up") {
+//		std::uniform_real_distribution<> dis(0.0f, _height-currentPosition.y);
+//		return Vec2(0, dis(gen));
+//	}
+//	else if (direction == "left") {
+//		std::uniform_real_distribution<> dis(0.0f, currentPosition.x);
+//		return Vec2(-dis(gen), 0);
+//	}
+//	else if (direction == "down") {
+//		std::uniform_real_distribution<> dis(0.0f, currentPosition.y);
+//		return Vec2(0, -dis(gen));
+//	}
+//	return Vec2(0, 0);
+//}
 
 void Animal::moveAround() {
+
+	//查看心情值、时间的变化
+	CCLOG("friendship:%f, time:%d", friendship, _currentFrame);
 	/*if (_moveCount >= maxMoveCount) {
 		return;
 	}*/
@@ -203,13 +209,13 @@ void Animal::moveAround() {
 
 	// 停止动画
 	auto stopAnimation = CallFunc::create([&]() {
-		CCLOG("stop animation");
+		//CCLOG("stop animation");
 		this->stopAllActions();
 		_currentSprite->setVisible(false);
 		});
 	// 开始动画
 	auto  startAnimation = CallFunc::create([&]() {
-		CCLOG("start animation");
+		//CCLOG("start animation");
 		_currentSprite->setVisible(true);
 		});
 
