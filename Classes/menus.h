@@ -1,10 +1,8 @@
 #pragma once
 #include"cocos2d.h"
-#include"maptry.h"
+#include"CharacterAnimation.h"
 USING_NS_CC;
 //物品栏标签
-#define GARBAGE 50
-const int MaxItemNum = 15;
 const int ItemNullTag = -1;
 const int ItemAxeTag = 1;
 const int ItemHoeTag = 2;
@@ -21,7 +19,9 @@ const int ItemFishingRodTag = 12;
 const int ItemFish1Tag=13;
 const int ItemFish2Tag=14;
 const int ItemFish3Tag=15;
+const int ItemGarbageTag=50;
 
+const int MaxItemNum = 16;
 
 /*使用方法：新建一个ItemLayer到scene中
 * Item类为物品栏物品的基类，新物品需要继承Item类并实现自己的init函数，并在init函数中添加自己的sprite和label
@@ -183,7 +183,7 @@ public:
 	CREATE_FUNC(ItemBag);
 	virtual bool init();
 	Vector<SquareBox*> square_boxes;
-	int now_select = 1;
+	int now_select=1;
 	int money;
 	Label* money_label;
 	void updateMoney(int money);
@@ -199,11 +199,24 @@ public:
 
 
 
+//游戏内物品栏层
+class ItemLayer :public Layer
+{
+public:
+	CREATE_FUNC(ItemLayer);
+	virtual bool init();
+	ItemBag* item_bag;
 
+};
 
 class ShopBox :public SquareBox {
 public:
 	CREATE_FUNC(ShopBox);
 	virtual bool init();
 	void addProduction(Item* item);
+	int tag;
+	Sprite* buy_button;
+	Sprite* sell_button;
+	void onMouseDown(EventMouse* event,ItemBag* item_bag);
+	ItemBag* item_bag;
 };

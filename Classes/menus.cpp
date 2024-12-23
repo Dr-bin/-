@@ -1,5 +1,4 @@
 #include "menus.h"
-
 // Menubox类的初始化方法
 bool Menubox::init()
 {
@@ -142,6 +141,16 @@ bool ItemBucket::init()
     this->item=Sprite::create("items/bucket.png");
     this->item->setScale(0.8);
     this->addChild(this->item);
+    return true;
+}
+
+// ItemLayer类的初始化方法
+bool ItemLayer::init()
+{
+    if(!Layer::init())
+    return false;
+    item_bag = ItemBag::create();
+    this->addChild(item_bag);
     return true;
 }
  
@@ -556,6 +565,7 @@ bool ShopBox::init()
 
 void ShopBox::addProduction(Item* item)
 {
+    this->tag=item->tag;
     this->addContent(item);
     Label* buy_price_label = Label::create();
     buy_price_label->setPosition(this->box->getPosition()+Vec2(80,10));
@@ -568,4 +578,51 @@ void ShopBox::addProduction(Item* item)
     sell_price_label->setPosition(this->box->getPosition()+Vec2(80,-10));
     sell_price_label->setString("Sell Price: "+sell_price+"G");
     this->addChild(sell_price_label);
+    buy_button = Sprite::create("BtBkg.png");
+    buy_button->setScaleX(2.0);
+    buy_button->setScaleY(0.5);
+    buy_button->setPosition(this->box->getPosition() + Vec2(220, 10));
+    this->addChild(buy_button);
+    auto buy_label = Label::create();
+    buy_label->setPosition(buy_button->getPosition()+Vec2(0,0));
+    buy_label->setString("Buy");
+    this->addChild(buy_label);
+    sell_button = Sprite::create("BtBkg.png");
+    sell_button->setScaleX(2.0);
+    sell_button->setScaleY(0.5);
+    sell_button->setPosition(this->box->getPosition() + Vec2(220, -10));
+    this->addChild(sell_button);
+    auto sell_label = Label::create();
+    sell_label->setPosition(sell_button->getPosition()+Vec2(0,0));
+    sell_label->setString("Sell");
+    this->addChild(sell_label);
+
+    auto _mouselistener = EventListenerMouse::create();
+    _mouselistener->onMouseDown = CC_CALLBACK_1(ShopBox::onMouseDown, this, item_bag);
+    Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_mouselistener, this);
+    
+}
+
+void ShopBox::onMouseDown(EventMouse* event, ItemBag* item_bag)
+{
+    int x = event->getCursorX();
+    int y = event->getCursorY();
+    
+    if (buy_button->getBoundingBox().containsPoint(this->convertToNodeSpace(Vec2(x, y)))) {
+        if (item_bag->money >= this->content->buy_price) {
+            item_bag->addItem(this->content->tag, 1);
+            item_bag->updateMoney(item_bag->money - this->content->buy_price);
+            log("buy:x:%d,y:%d", x, y);
+        }
+    }
+    if (sell_button->getBoundingBox().containsPoint(this->convertToNodeSpace(Vec2(x, y)))) {
+        if (item_bag->serchItem(this->content->tag) != -1) {
+            item_bag->removeItem(item_bag->serchItem(this->content->tag), 1);
+            item_bag->updateMoney(item_bag->money + this->content->sell_price);
+            log("sell:x:%d,y:%d", x, y);
+        }
+        
+    }
+   
+    
 }

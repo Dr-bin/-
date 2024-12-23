@@ -6,7 +6,7 @@ bool Cook::init() {
     {
         return false;
     }
-    //stimulateKey = EventKeyboard::KeyCode::KEY_C;
+    stimulateKey = EventKeyboard::KeyCode::KEY_C;
 
     onShow();
 
@@ -105,7 +105,7 @@ bool Cook::init() {
             if (sum <= MaxItemNum)
                 cook_result->addContent(bag->getItem(sum));
             else
-                cook_result->addContent(bag->getItem(GARBAGE));
+                cook_result->addContent(bag->getItem(ItemGarbageTag));
 
             return true;
         }
@@ -124,7 +124,7 @@ void Cook::onShow()
     cook_origin2 = SquareBox::create();
     cook_origin3 = SquareBox::create();
     cook_result = SquareBox::create();
-
+    log("cooking");
     auto boardsize = popupContainer->getContentSize();
     auto w = boardsize.width;
     auto h = boardsize.height;

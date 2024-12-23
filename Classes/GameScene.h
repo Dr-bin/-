@@ -1,9 +1,9 @@
 #pragma once
 #include"cocos2d.h"
-#include "menus.h"
-#include"ItemLayer.h"
+#include"Cook.h"
 #include"maptry.h"
 #include"PopupBase.h"
+#include"LevelTree.h"
 USING_NS_CC;
 
 class GameScene :public Scene

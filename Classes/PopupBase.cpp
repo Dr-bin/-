@@ -1,4 +1,5 @@
 #include "PopupBase.h"
+#include"menus.h"
 
 // 静态变量，用于跟踪当前显示的弹窗
 PopupBase* PopupBase::currentPopup = nullptr;
@@ -58,6 +59,7 @@ bool PopupBase::init()
     pressLisener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event* event) {
         if (keyCode == stimulateKey) {
             this->show();
+       
             return true;
         }
         return false;
@@ -139,8 +141,10 @@ bool PopupShop::init()
 void PopupShop::onShow()
 {
     //创建商店
+
     for (int i = 0; i < 5; i++) {
         auto shopBox = ShopBox::create();
+        shopBox->item_bag = this->itemBag;
         shopBoxs.pushBack(shopBox);
         shopBox->setPosition(Vec2(popupContainer->getContentSize().width / 2 - 500, popupContainer->getContentSize().height / 2 - 50 - i * 50));
         contentArea->addChild(shopBox);
@@ -150,7 +154,6 @@ void PopupShop::onShow()
     setShopBoxs(tags);
     _mouse= EventListenerMouse::create();
     _mouse->onMouseDown = CC_CALLBACK_1(PopupShop::OnMouseDown, this);
-   
     Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_mouse, this);
     
 }
@@ -175,5 +178,4 @@ void PopupShop::setShopBoxs(int tags[5])
 
 void PopupShop::OnMouseDown(EventMouse* event)
 {
-    log("shop mouse down");
 }

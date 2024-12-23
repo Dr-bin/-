@@ -3,7 +3,7 @@
 #include "cocos2d.h"
 USING_NS_CC;
 
-#define SEASON_TIME 100.0f//一个季节持续多少秒
+#define SEASON_TIME 15.0f//一个季节持续多少秒
 
 class GameTime : public cocos2d::Ref {
 public:

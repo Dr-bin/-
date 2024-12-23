@@ -1,6 +1,6 @@
 #pragma once
 #include "cocos2d.h"
-
+#include"DataProvider.h"
 USING_NS_CC;
 
 // 使用示例
@@ -50,7 +50,11 @@ public:
     float MouseScrollY = 0;                 //滚轮纵向状态，1为向上，-1为向下
     //一些状态变量
     int now_item = 1;                         //当前物品
-
+    int axeTimes = 0;                         //铁锹使用次数
+    int pickTimes = 0;                        //镐使用次数
+    int hoeTimes = 0;                         //锄头使用次数
+    int fishTimes = 0;                       //钓鱼使用次数
+    int exp[4] = {};
     static CharacterAnimation* create(const std::string& plistFile, float frameDuration, float scale, const Vec2& position);
 
     bool init(const std::string& plistFile, float frameDuration, float scale, const Vec2& position);

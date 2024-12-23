@@ -45,11 +45,17 @@ public:
     CREATE_FUNC(PopupShop);
     void onShow();
     void onHide();
+    ItemBag* itemBag;
     EventListenerMouse* _mouse;
     Vector<ShopBox*> shopBoxs;
     void setShopBoxs(int tags[5]);
     void OnMouseDown(EventMouse* event);
-    int tags[5] = { 1,2,3,4,5 };
+    int tags[5] = { 1,2,3,4,12 };
+    void changeTags(int tags[5]){
+        for (int i = 0; i < 5; i++) {
+            this->tags[i] = tags[i];
+       }
+     }
 };
 
 #endif // __BASEPOP__
