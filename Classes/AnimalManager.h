@@ -5,7 +5,7 @@
 #include "cocos2d.h"
 
 USING_NS_CC;
-
+class ItemBag;
 class AnimalManager : public Layer
 {
 private:
@@ -16,6 +16,7 @@ private:
     int yEnd = 450;
 
 public:
+    ItemBag* itemBag; // 道具袋
     // 初始化事件监听
     virtual bool init() override;
 

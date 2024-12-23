@@ -1,6 +1,6 @@
 #pragma once
 #pragma once
-#include "cocos2d.h"
+
 #include<algorithm>
 #include <vector>
 #include "cocos2d.h"

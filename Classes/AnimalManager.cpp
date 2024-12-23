@@ -1,7 +1,19 @@
 #include "AnimalManager.h"
-
+#include"menus.h"
 
 using namespace cocos2d;
+
+int stringToTag(std::string str)
+{
+	if (str == "Milk")
+		return 11;
+	else if (str == "Egg")
+		return 17;
+	else if (str == "Fur")
+		return 16;
+	else
+		return -1;
+}
 
 AnimalManager* AnimalManager::create()
 {
@@ -44,6 +56,9 @@ void AnimalManager::sellAnimal(Animal* animal)
 		// Selling logic: remove the animal and return the price
 		int price = dynamic_cast<Livestock*>(animal)->getPrice();
 		CCLOG("Animal sold for %d", price);
+		itemBag->money += price;
+		itemBag->updateMoney(itemBag->money);
+
 		removeAnimal(animal);
 	}
 	else {
@@ -79,9 +94,15 @@ void AnimalManager::checkForAnimals(Vec2 clickPosition)
 			// TODO:人物获得产品
 			if (auto livestock = dynamic_cast<Livestock*>(animal))
 			{
-				int havecstNum = 0;
+				int havecstNum = 0, tag = -1;
 				std::string productName = livestock->getProduct(havecstNum);
-				CCLOG("Product obtained: %s, Quantity: %d", productName.c_str(), havecstNum);
+				tag = stringToTag(productName);
+				if (tag != -1 && havecstNum > 0) {
+					itemBag->addItem(tag, havecstNum);
+					itemBag->money += itemBag->getItem(tag)->sell_price * havecstNum;
+					itemBag->updateMoney(itemBag->money);
+				}
+
 			}
 			else if (auto pet = dynamic_cast<Pet*>(animal))
 			{
@@ -115,7 +136,7 @@ void AnimalManager::addNewAnimal(const std::string& animalType)
 	Animal* newAnimal = nullptr;
 	if (animalType == "Cow")
 	{
-		newAnimal = Cow::create(Vec2(100, 200));
+		newAnimal = Cow::create(position);
 	}
 	else if (animalType == "Sheep")
 	{

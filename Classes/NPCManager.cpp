@@ -1,7 +1,7 @@
 
 
 #include "NPCManager.h"
-
+#include "TaskWindowLayer.h"
 
 USING_NS_CC;
 using namespace cocos2d;
@@ -61,8 +61,18 @@ void NPCManager::onMouseDown(Event* event) {
     else if (e->getMouseButton() == EventMouse::MouseButton::BUTTON_RIGHT) {
         // Right click event
         //进入当前任务栏
-       // checkRightNPCs(clickLocation);
+        checkRightClickNPCs(clickLocation);
 
+    }
+}
+
+void NPCManager::checkRightClickNPCs(Vec2 clickPosition) {
+    for (auto npc : npcs) {
+        if (npc->getCurrentSprite()->getBoundingBox().containsPoint(clickPosition)) {
+            // 显示任务窗口
+            showTaskWindow(npc);
+            break;
+        }
     }
 }
 
@@ -100,13 +110,9 @@ void  NPCManager::addNewNPC(const std::string& npcName)
     }
 
 }
-//void NPCManager::checkRightNPCs(Vec2 clickPosition) {
-//      for (auto npc : npcs) {
-//        if (npc->getCurrentSprite()->getBoundingBox().containsPoint(clickPosition)) {
-//            npc->turnTaskBar();
-//            auto taskbar = PopupBase::create();
-//            taskbar->show();
-//            break;
-//        }
-//    }
-//}
+
+void NPCManager::showTaskWindow(NPC* npc) {
+    auto taskWindow = TaskWindowLayer::create(npc);
+    Director::getInstance()->getRunningScene()->addChild(taskWindow);
+   
+}

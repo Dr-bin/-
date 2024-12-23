@@ -2,6 +2,8 @@
 #include <vector>
 #include "cocos2d.h"
 #include"Animal.h"
+#include"Task.h"
+
 #define FRIENDSHIP_PER_LEVEL 250
 USING_NS_CC;
 
@@ -69,7 +71,7 @@ public:
         // 生成随机数
         return (float)dis(gen);
     };
-    int getRandomRepeatTime() {return rand() % 3 + 3; };
+    int getRandomRepeatTime() {return rand() % 3 + 10; };
     bool isAlive() { return _isAlive; }
     double getFriendship() const { return friendship; }
     void addFriendship(int value);
@@ -107,6 +109,7 @@ public:
         this->runAction(sequence->clone());
         _currentLabel->setVisible(false);
     }
+    virtual std::vector<Task*> getTasks() const = 0;
 };
 #endif // NPC_H
 
@@ -154,7 +157,16 @@ public:
         CC_SAFE_DELETE(leah);
         return nullptr;
     }
+
+    virtual std::vector<Task*> getTasks() const override {
+        std::vector<Task*> tasks;
+        // 添加Leah发布的任务
+        tasks.push_back(new Task(1, "Collect Eggs", "Collect 10 eggs from the chicken coop.", 10, 30, 10.0));
+        tasks.push_back(new Task(2, "Milk the Cow", "Milk the cow 5 times.", 5, 15, 5.0));
+        return tasks;
+    }
 };
+
 
 class Elliott : public NPC {
 public:
@@ -197,6 +209,13 @@ public:
         }
         CC_SAFE_DELETE(elliott);
         return nullptr;
+    }
+    virtual std::vector<Task*> getTasks() const override {
+        std::vector<Task*> tasks;
+        // 添加Leah发布的任务
+        tasks.push_back(new Task(1, "Collect Eggs", "Collect 10 eggs from the chicken coop.", 10, 30, 10.0));
+        tasks.push_back(new Task(2, "Milk the Cow", "Milk the cow 5 times.", 5, 15, 5.0));
+        return tasks;
     }
 };
 
@@ -241,6 +260,13 @@ public:
         CC_SAFE_DELETE(alex);
         return nullptr;
     }
+    virtual std::vector<Task*> getTasks() const override {
+        std::vector<Task*> tasks;
+        // 添加Leah发布的任务
+        tasks.push_back(new Task(1, "Collect Eggs", "Collect 10 eggs from the chicken coop.", 10, 30, 10.0));
+        tasks.push_back(new Task(2, "Milk the Cow", "Milk the cow 5 times.", 5, 15, 5.0));
+        return tasks;
+    }
 };
 
 class Amy : public NPC {
@@ -284,6 +310,13 @@ public:
         CC_SAFE_DELETE(amy);
         return nullptr;
     }
+    virtual std::vector<Task*> getTasks() const override {
+        std::vector<Task*> tasks;
+        // 添加Leah发布的任务
+        tasks.push_back(new Task(1, "Collect Eggs", "Collect 10 eggs from the chicken coop.", 10, 30, 10.0));
+        tasks.push_back(new Task(2, "Milk the Cow", "Milk the cow 5 times.", 5, 15, 5.0));
+        return tasks;
+    }
 
 };
 
@@ -320,5 +353,12 @@ public:
         }
         CC_SAFE_DELETE(baby);
         return nullptr;
+    }
+    virtual std::vector<Task*> getTasks() const override {
+        std::vector<Task*> tasks;
+        // 添加Baby的任务
+        tasks.push_back(new Task(1, "Collect Eggs", "Collect 10 eggs from the chicken coop.", 10, 30, 10.0));
+        tasks.push_back(new Task(2, "Milk the Cow", "Milk the cow 5 times.", 5, 15, 5.0));
+        return tasks;
     }
 };

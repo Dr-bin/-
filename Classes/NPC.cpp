@@ -18,6 +18,12 @@ bool NPC::init(Vec2 startPosition) {
     _moveLeftSprite->setVisible(false);
     _moveDownSprite->setVisible(false);
 
+    //设置大小为两倍
+    _moveUpSprite->setScale(2.0);
+    _moveLeftSprite->setScale(2.0);
+    _moveDownSprite->setScale(2.0);
+    _moveRightSprite->setScale(2.0);
+
     addChild(_moveRightSprite);
     addChild(_moveUpSprite);
     addChild(_moveLeftSprite);

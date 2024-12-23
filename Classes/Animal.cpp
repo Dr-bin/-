@@ -1,5 +1,5 @@
 #include"Animal.h"
-
+#include"menus.h"
 
 bool Animal::init(Vec2 startPosition)
 {
@@ -21,6 +21,11 @@ bool Animal::init(Vec2 startPosition)
 	_moveUpSprite->setVisible(false);
 	_moveLeftSprite->setVisible(false);
 	_moveDownSprite->setVisible(false);
+
+	_moveUpSprite->setScale(2.0);
+	_moveLeftSprite->setScale(2.0);
+	_moveDownSprite->setScale(2.0);
+	_moveRightSprite->setScale(2.0);
 
 	addChild(_moveRightSprite);
 	addChild(_moveUpSprite);

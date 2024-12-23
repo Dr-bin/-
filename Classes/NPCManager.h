@@ -1,19 +1,23 @@
+#pragma once
 #ifndef NPC_MANAGER_H
 #define NPC_MANAGER_H
 
 #include "NPC.h"
 #include "cocos2d.h"
-#include "PopupBase.h"
+//#include "PopupBase.h"
+
 
 USING_NS_CC;
+
+class TaskWindowLayer;
 
 class NPCManager : public Layer {
 private:
     Vector<NPC*> npcs; // 存储所有的NPC
-    int xStart = 1100;
+    int xStart = 400;
     int xEnd = 1300;
     int yStart = 200;
-    int yEnd = 450;
+    int yEnd = 1000;
 
 public:
     // 初始化事件监听
@@ -37,7 +41,9 @@ public:
 
     // 创建并添加指定类型的NPC到场景中
     void addNewNPC(const std::string& npcType);
-    //void  checkRightNPCs(clickLocation);
+    void checkRightClickNPCs(Vec2 clickPosition);
+    //显示任务
+    void showTaskWindow(NPC* npc);
 };
 
 #endif // NPC_MANAGER_H
